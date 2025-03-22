@@ -1,10 +1,10 @@
 {
     "project": {
         "name": "mybgg",
-        "title": ""
+        "title": "Welcome to Boardom's End!"
     },
     "boardgamegeek": {
-        "user_name": "YOUR_BGG_USERNAME",
+        "user_name": "ashleyspub",
         "extra_params": {
             "own": 1
         }
