@@ -10,8 +10,8 @@
         }
     },
     "algolia": {
-        "app_id": "YOUR_APP_ID",
-        "api_key_search_only": "YOUR_PUBLIC_API_KEY",
+        "app_id": "PNTS2AEN3U",
+        "api_key_search_only": "61b77b17ee869a9e23ca2f7e7adadb53",
         "index_name": "YOUR_INDEX_NAME",
         "hits_per_page": 24
     }
