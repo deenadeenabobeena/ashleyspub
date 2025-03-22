@@ -12,7 +12,7 @@
     "algolia": {
         "app_id": "PNTS2AEN3U",
         "api_key_search_only": "61b77b17ee869a9e23ca2f7e7adadb53",
-        "index_name": "YOUR_INDEX_NAME",
+        "index_name": "PubGames",
         "hits_per_page": 24
     }
 }
