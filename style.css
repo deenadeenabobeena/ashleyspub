@@ -542,12 +542,12 @@ body {
 .ais-HierarchicalMenu-count, .ais-RefinementList-count, .ais-NumericMenu-count {
     padding: 5px 8px;
     margin-left: 5px;
-    background: #efefef;
+    background: var(--test);
     border-radius: 10px;
 }
 
 .ais-RefinementList-showMore {
-    color: var(--test);
+    color: var(--hl);
     cursor: pointer;
     font-size: 0.8em;
     margin-left: 2.3em;
