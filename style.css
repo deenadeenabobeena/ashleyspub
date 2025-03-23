@@ -2,6 +2,8 @@
 body {
     background: #ede7f6;
     background-image: url("publogo.png");
+    background-position: right bottom;
+    background-size: 50%;
     color: #ede7f6;
     font-family: 'Roboto', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
     font-size: 14px;
