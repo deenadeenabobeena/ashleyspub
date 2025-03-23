@@ -7,8 +7,8 @@
 }
 
 body, h3 {
-    background: transparent;
-    color: #222;
+    
+    color: var(--hl);
     font-family: 'nunito_sans', 'Calibri', sans-serif;
     font-size: 15px !important;
     font-weight: 300;
