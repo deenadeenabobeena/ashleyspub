@@ -2,6 +2,7 @@
     --hl: #0099cc; /* blue */
     --main: #4c0080; /* dark purple */
     --pale: #fafafa; /* play gray */
+    --dark #222; /* dark gray */
     --test: #09fa1c; /* bright green */
 }
 
@@ -576,7 +577,7 @@ body {
 
 .ais-Pagination-item--disabled a, .ais-Pagination-item--disabled span {
     background: #fff;
-    border: 1px var(--hl) solid;
+    border: 1px var(--pale) solid;
 }
 
 .ais-Pagination-item--selected a {
