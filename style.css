@@ -88,7 +88,7 @@ body {
 .search {
     display: flex;
     align-items: center;
-    background: #fafafa;
+    background: var(--pale);
     background: -moz-linear-gradient(top, #fafafa 0%, #f5f8fa 100%);
     background: -webkit-linear-gradient(top, #fafafa 0%, #f5f8fa 100%);
     background: linear-gradient(to bottom, #fafafa 0%, #f5f8fa 100%);
@@ -124,7 +124,7 @@ body {
     scrollbar-width: none;
     height: 47px;
     background: #222;
-    background: -moz-linear-gradient(top, #fcfcfc 0%, #f5f8fa 100%);
+    background: -moz-linear-gradient(top, #fcfcfc 0%, #f5f8fa 100%); /* safe */
     background: -webkit-linear-gradient(top, #fcfcfc 0%, #f5f8fa 100%);
     background: linear-gradient(to bottom, #fcfcfc 0%, #f5f8fa 100%);
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#f5f8fa', GradientType=0);
@@ -137,7 +137,7 @@ body {
 }
 
 .facet:hover h3 {
-    border-bottom: 2px solid var(--hl);
+    border-bottom: 2px solid var(--test);
     padding-top: 1px;
 }
 
