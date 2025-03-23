@@ -433,7 +433,7 @@ body {
 }
 
 .game-details .close:hover, .game-details .close:focus-within {
-    color: var(--test);
+    color: var(--hl);
 }
 
 .game-details .properties, .game-details .description {
@@ -501,7 +501,7 @@ body {
 }
 
 .facet .ais-Panel-body {
-    background: var(--test);
+    background: var(--pale);
     box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
     border: 1px solid rgba(0, 0, 0, 0.1);
     padding: 1em;
