@@ -147,7 +147,7 @@ body {
         }
 
 .stats {
-    display: inline-block;
+    display: none;
     margin-right: 1em;
     flex-grow: 1;
 }
