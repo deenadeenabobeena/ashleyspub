@@ -430,7 +430,7 @@ body {
 }
 
 .game-details .close:hover, .game-details .close:focus-within {
-    color: var(--hl);
+    color: 09fa1c;
 }
 
 .game-details .properties, .game-details .description {
