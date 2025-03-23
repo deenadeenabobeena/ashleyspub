@@ -15,7 +15,7 @@
         "index_name": "PubGames",
         "hits_per_page": 24
     }
-   { document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function() {
   // Find the sorting mechanism on your page
   // This assumes you have some sort of select or button elements for sorting
   
@@ -27,4 +27,4 @@
     // Trigger the change event to apply the sorting
     sortSelect.dispatchEvent(new Event('change'));
   }
-}
+
