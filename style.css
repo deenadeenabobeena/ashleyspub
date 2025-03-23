@@ -542,7 +542,7 @@ body {
 .ais-HierarchicalMenu-count, .ais-RefinementList-count, .ais-NumericMenu-count {
     padding: 5px 8px;
     margin-left: 5px;
-    background: var(--test);
+    background: var(--pale);
     border-radius: 10px;
 }
 
@@ -576,7 +576,7 @@ body {
 
 .ais-Pagination-item--disabled a, .ais-Pagination-item--disabled span {
     background: #fff;
-    border: 1px #efefef solid;
+    border: 1px var(--hl) solid;
 }
 
 .ais-Pagination-item--selected a {
