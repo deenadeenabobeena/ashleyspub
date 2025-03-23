@@ -411,7 +411,7 @@ body {
 }
 
 .properties-footer div span {
-    color: var(--test);
+    color: var(--hl);
     text-transform: uppercase;
     font-weight: 700;
     font-size: 12px;
