@@ -498,7 +498,7 @@ body {
 }
 
 .facet .ais-Panel-body {
-    background: #F8FAFC;
+    background: var(--hl);
     box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
     border: 1px solid rgba(0, 0, 0, 0.1);
     padding: 1em;
