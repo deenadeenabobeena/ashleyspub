@@ -137,7 +137,7 @@ body {
 }
 
 .facet:hover h3 {
-    border-bottom: 2px solid var(--test);
+    border-bottom: 2px solid var(--hl);
     padding-top: 1px;
 }
 
@@ -199,7 +199,7 @@ body {
     height: 0;
     border-left: 5px solid transparent;
     border-right: 5px solid transparent;
-    border-top: 7px solid var(--hl);
+    border-top: 7px solid var(--test);
     clear: both;
 }
 
@@ -252,7 +252,7 @@ body {
 }
 
 .ais-SearchBox-submitIcon {
-    fill: var(--test);
+    fill: var(--main);
     height: 18px;
     width: 18px;
 }
