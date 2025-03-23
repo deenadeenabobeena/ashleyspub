@@ -8,7 +8,7 @@
 
 body, h3 {
     background: transparent;
-    color: var(--hl);
+    color: #222;
     font-family: 'nunito_sans', 'Calibri', sans-serif;
     font-size: 15px !important;
     font-weight: 300;
@@ -120,7 +120,7 @@ body {
     overflow-y: hidden;
     scrollbar-width: none;
     height: 47px;
-    background: #fcfcfc;
+    background: var(--hl);
     background: -moz-linear-gradient(top, #fcfcfc 0%, #f5f8fa 100%);
     background: -webkit-linear-gradient(top, #fcfcfc 0%, #f5f8fa 100%);
     background: linear-gradient(to bottom, #fcfcfc 0%, #f5f8fa 100%);
