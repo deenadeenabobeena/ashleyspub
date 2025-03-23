@@ -8,6 +8,7 @@ body {
     letter-spacing: .01em;
     line-height: 1.2;
 }
+/* a is dark red */
 a {
     color: #b71c1c;
 }
