@@ -252,7 +252,7 @@ body {
 }
 
 .ais-SearchBox-submitIcon {
-    fill: var(--hl);
+    fill: var(--test);
     height: 18px;
     width: 18px;
 }
