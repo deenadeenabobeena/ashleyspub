@@ -42,9 +42,9 @@
     <details class="game-wrapper">
       <summary>
         <div class="game">
-          <img src="{{{ image }}}" data-maincolor="{{{ color }}}" alt="{{{ name }}}">
+          <img src="{{{ image }}}" alt="{{{ name }}}">
         </div>
-    <div class="gamename">{{{ name }}}</div>
+        <div class="gamename">{{{ name }}}</div>
       </summary>
       <div class="game-details">
         <div class="game-details-wrapper">
@@ -53,58 +53,54 @@
             {{# helpers.highlight }}{ "attribute": "name" }{{/ helpers.highlight }}
           </a>
         </h2>
-        <dl class="properties">
+        <dl class="properties-header">
           <div>
-            <dt>Players</dt>
+            <img src="images/ico-players.svg" title="Supported players">
             <dd>{{{ players_str }}}</dd>
           </div>
           <div>
-            <dt>Playing time</dt>
+            <img src="images/ico-rating.svg" title="Rating">
+            <dd>{{ rating }}</dd>
+          </div>
+          <div>
+            <img src="images/ico-time.svg" title="Playing time">
             <dd>{{ playing_time }}</dd>
           </div>
           <div>
-            <dt>Complexity</dt>
-            <dd>{{ weight }}</dd>
+            <img src="images/ico-complexity.svg" title="Complexity">
+            <dd>{{ weight }} <em>({{ weight_rating }})</em></dd>
           </div>
+        </dl>
+        <p class="description">
+          {{# helpers.highlight }}{ "attribute": "description" }{{/ helpers.highlight }}
+        </p>
+        <dl class="properties-footer">
           <div>
-            <dt>Tags</dt>
-            <dd>{{ tags_str }}</dd>
-          </div>
-          <div>
-            <dt>Categories</dt>
+            <span>Categories:</span>
             <dd>
               {{# categories_str }}{{ categories_str }}{{/ categories_str }}
               {{^ categories_str}}<em>No categories</em>{{/ categories_str }}
             </dd>
           </div>
           <div>
-            <dt>Mechanics</dt>
+            <span>Mechanics:</span>
             <dd>
               {{# mechanics_str }}{{ mechanics_str }}{{/ mechanics_str }}
               {{^ mechanics_str}}<em>No mechanics</em>{{/ mechanics_str }}
             </dd>
           </div>
-        
           {{# has_expansions }}
           <div class="expansions">
-            <dt>Expansions</dt>
-            <dd>
-              <ul>
-                {{# expansions }}
-                  <li><a href="https://boardgamegeek.com/boardgame/{{{ id }}}">{{ name }}</a></li>
-                {{/ expansions }}
-              </ul>
-              {{# has_more_expansions }}
-                <a href="{{ has_more_expansions_url }}">... see all expansions</a>
-              {{/ has_more_expansions }}
-            </dd>
+            <span>Expansions owned:</span>
+            <dd><ul>
+              {{# expansions }}
+                <li><a href="https://boardgamegeek.com/boardgame/{{{ id }}}">{{ name }}</a></li>
+              {{/ expansions }}
+            </ul></dd>
           </div>
           {{/ has_expansions }}
         </dl>
-        <p class="description">
-          {{# helpers.highlight }}{ "attribute": "description" }{{/ helpers.highlight }}
-        </p>
-  </div>
+      </div>
       </div>
     </details>
   </script>
