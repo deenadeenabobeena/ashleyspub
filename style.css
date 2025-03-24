@@ -151,7 +151,9 @@ body {
     border-bottom: 2px solid var(--hl);
     padding-top: 1px;
 }
-
+#facet-min-age {
+  display: none;
+}
 /* Components */
 
 .logo {
