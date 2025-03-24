@@ -124,11 +124,11 @@ body {
     overflow-y: hidden;
     scrollbar-width: none;
     height: 47px;
-    background: var(--test);
-    background: -moz-linear-gradient(top, #fcfcfc 0%, #f5f8fa 100%); /* safe */
-    background: -webkit-linear-gradient(top, #fcfcfc 0%, #f5f8fa 100%);
-    background: linear-gradient(to bottom, #fcfcfc 0%, #f5f8fa 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#f5f8fa', GradientType=0);
+    background: var(--main);
+    background: -moz-linear-gradient(top, #4c0080 0%, #3a0060 100%); /* Purple gradient */
+    background: -webkit-linear-gradient(top, #4c0080 0%, #3a0060 100%);
+    background: linear-gradient(to bottom, #4c0080 0%, #3a0060 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4c0080', endColorstr='#3a0060', GradientType=0);
     gap: 50px;
     justify-content: center;
 }
