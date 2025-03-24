@@ -98,9 +98,9 @@ body {
     height: 146px;
     background-image: url('images/bg.jpg');
     background-repeat: no-repeat;
-    background-size: auto 185px;
+    background-size: auto; /* 185px; */
     background-attachment: scroll;
-    background-position: 105px -38px;
+    /* background-position: 105px -38px; */
 }
 
 .search label {
