@@ -707,6 +707,6 @@ body {
 }
 
 .attribution {
-color: black;
+    background-color: black;
     width: 100%
 }
