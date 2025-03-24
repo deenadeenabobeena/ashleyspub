@@ -120,7 +120,7 @@ function get_widgets(SETTINGS) {
   return {
     "search": instantsearch.widgets.searchBox({
       container: '#search-box',
-      placeholder: 'Search for games'
+      placeholder: 'What are you looking for?'
     }),
     "sort": instantsearch.widgets.sortBy({
       container: '#sort-by',
