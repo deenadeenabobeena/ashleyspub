@@ -179,7 +179,7 @@ body {
     height: 47px;
     width: 100%;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-    color: var(--test);
+    color: var(--main);
     font-family: 'nunito_sans', 'Calibri', sans-serif;
     font-size: 16px !important;
     font-weight: 300;
@@ -324,7 +324,7 @@ body {
 
 .ais-Highlight-highlighted {
     background: transparent;
-    color: inherit;
+    color: var(--test);
     text-decoration: underline;
     font-weight: 700;
 }
@@ -382,7 +382,7 @@ body {
 }
 
 .game-details .heading a {
-    text-decoration: none;
+    text-decoration: underline;
 }
 
 .game-details .heading a:hover {
