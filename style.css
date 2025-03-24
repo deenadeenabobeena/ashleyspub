@@ -731,29 +731,61 @@ body {
     float: right;
 }
 .random-game-btn {
-    background-color: var(--hl);
+    position: relative;
+    background: linear-gradient(135deg, #e63462 0%, #8f1537 100%);
     color: white;
     border: none;
-    border-radius: 4px;
-    padding: 0 13px;
+    width: 47px;
     height: 47px;
     font-family: 'nunito_sans', 'Calibri', sans-serif;
-    font-size: 16px !important;
     font-weight: 700;
-    letter-spacing: 0.2px;
+    font-size: 13px !important;
     cursor: pointer;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
     margin-left: 10px;
-    transition: background-color 0.2s;
+    transition: transform 0.3s, box-shadow 0.3s;
+    clip-path: polygon(
+        50% 0%, 
+        90% 20%, 
+        100% 60%, 
+        75% 100%, 
+        25% 100%, 
+        0% 60%, 
+        10% 20%
+    );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .random-game-btn:hover {
-    background-color: #007aa3;
+    transform: rotate(30deg);
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.random-game-btn:active {
+    transform: rotate(180deg);
+}
+
+.random-game-btn::before {
+    content: "d20";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 16px;
+    font-weight: bold;
 }
 
 @media only screen and (max-width: 899px) {
     .random-game-btn {
         height: 37px;
-        font-size: 14px !important;
+        width: 37px;
+        font-size: 12px !important;
+    }
+    
+    .random-game-btn::before {
+        font-size: 14px;
     }
 }
