@@ -522,7 +522,7 @@ body {
 
 .facet label {
     cursor: pointer;
-    color: var(--pale);
+    color: var(--main);
 }
 
 .ais-HierarchicalMenu-item, .ais-RefinementList-item, .ais-NumericMenu-item {
