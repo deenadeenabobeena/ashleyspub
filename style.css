@@ -179,7 +179,7 @@ body {
     height: 47px;
     width: 100%;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-    color: var(--main);
+    color: var(--test);
     font-family: 'nunito_sans', 'Calibri', sans-serif;
     font-size: 16px !important;
     font-weight: 300;
