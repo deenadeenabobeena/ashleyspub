@@ -347,7 +347,7 @@ body {
 
 .game-details .game-details-wrapper {
     background: #fff;
-    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
     border-radius: 4px;
     margin: auto auto;
     max-width: 600px;
@@ -522,7 +522,7 @@ body {
 
 .facet label {
     cursor: pointer;
-    color: var(--hl);
+    color: var(--pale);
 }
 
 .ais-HierarchicalMenu-item, .ais-RefinementList-item, .ais-NumericMenu-item {
