@@ -729,6 +729,7 @@ body {
 }
 .attribution img {
     float: right;
+    margin-right: 10px;
 }
 .random-game-btn {
     position: relative;
