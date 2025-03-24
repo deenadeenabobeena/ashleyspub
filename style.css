@@ -705,3 +705,8 @@ body {
 #pagination {
     margin-top: 40px;
 }
+
+.attribution {
+color: black;
+    width: 100%
+}
