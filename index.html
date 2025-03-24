@@ -13,7 +13,7 @@
 </head>
 <body>
   <header class="search">
-    <img class="logo" src="img/favicon.ico" height="36" width="36">
+    <img class="logo" src="images/favicon.ico" height="36" width="36">
     <div class="search-box" id="search-box"></div>
     <label>Sort by:</label>
     <div class="sort-by" id="sort-by"></div>
@@ -106,40 +106,6 @@
   </script>
 
   <script src="app.js"></script>
-
-<script>
-  // Wait for InstantSearch to be initialized
-  document.addEventListener('DOMContentLoaded', function() {
-    // Give InstantSearch time to render
-    setTimeout(function() {
-      // Function to apply the fix
-      function showAllFacetValues() {
-        // Hide show more buttons
-        ;
-        
-        // Find all facet lists
-        const facetLists = document.querySelectorAll('.ais-RefinementList-list');
-        facetLists.forEach(list => {
-          // Override any height restrictions
-          list.style.maxHeight = 'none';
-          list.style.overflow = 'visible';
-          
-          // Show all items, including hidden ones
-          const items = list.querySelectorAll('.ais-RefinementList-item');
-          items.forEach(item => {
-            item.style.display = 'block';
-          });
-        });
-      }
-      
-      // Apply the fix now
-      showAllFacetValues();
-      
-      // Also apply the fix after each query when results refresh
-      document.addEventListener('render', showAllFacetValues);
-    }, 1000); // Wait 1 second for everything to initialize
-  });
-</script>
   
 </body>
   <footer>
