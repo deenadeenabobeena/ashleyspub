@@ -383,6 +383,7 @@ body {
 
 .game-details .heading a {
     text-decoration: underline;
+    color: var(--hl);
 }
 
 .game-details .heading a:hover {
