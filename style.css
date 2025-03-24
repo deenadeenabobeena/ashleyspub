@@ -567,8 +567,15 @@ body {
     
     
 }
-.ais-RefinementList-item {
+/* Force display of all hidden items */
+.ais-RefinementList-item.ais-RefinementList-item--hidden {
     display: block !important;
+}
+
+/* Override any max-height restrictions on the list */
+.ais-RefinementList-list {
+    max-height: none !important;
+    overflow: visible !important;
 }
 
 .ais-RefinementList-showMore:hover, .ais-RefinementList-showMore:focus-within {
