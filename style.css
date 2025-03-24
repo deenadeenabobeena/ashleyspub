@@ -23,7 +23,7 @@ body {
 
 h3 {
     
-    color: #cc00cc; /* text under games and on the facet bar for filters */
+    color: var(--test); /* text under games and on the facet bar for filters */
     font-family: 'nunito_sans', 'Calibri', sans-serif;
     font-size: 15px !important;
     font-weight: 700;
