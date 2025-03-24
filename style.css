@@ -556,7 +556,7 @@ body {
 .ais-HierarchicalMenu-count, .ais-RefinementList-count, .ais-NumericMenu-count {
     padding: 5px 8px;
     margin-left: 5px;
-    background: var(--hl);
+    background: #d6eaf8;
     border-radius: 10px;
 }
 
