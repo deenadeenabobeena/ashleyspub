@@ -143,7 +143,7 @@ function get_widgets(SETTINGS) {
         collapsible: true,
         attribute: 'categories',
         operator: 'and',
-        showMore: true,
+        showMore: false,
       }
     ),
     "refine_mechanics": panel('Mechanics')(instantsearch.widgets.refinementList)(
