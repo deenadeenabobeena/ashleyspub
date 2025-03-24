@@ -21,34 +21,36 @@ function getRandomGame() {
     const indexName = config.algolia.index_name;
     const index = searchClient.initIndex(indexName);
     
-    // First, get the total number of records
+    // First, get the total number of pages
     index.search('', {
-      hitsPerPage: 0,  // We just want to get the number of records
+      hitsPerPage: 20  // Standard page size
     }).then(function(response) {
-      const totalRecords = response.nbHits;
-      if (totalRecords > 0) {
-        // Get a random offset within the available records
-        const randomOffset = Math.floor(Math.random() * totalRecords);
+      const totalPages = response.nbPages;
+      if (totalPages > 0) {
+        // Get a random page number
+        const randomPage = Math.floor(Math.random() * totalPages);
         
-        // Now fetch a single record at that random position
+        // Now fetch records from that random page
         index.search('', {
-          hitsPerPage: 1,
-          offset: randomOffset
+          hitsPerPage: 20,
+          page: randomPage
         }).then(function(response) {
           if (response.hits && response.hits.length > 0) {
-            const randomGame = response.hits[0];
+            // Pick a random game from the page
+            const randomIndex = Math.floor(Math.random() * response.hits.length);
+            const randomGame = response.hits[randomIndex];
             displayRandomGame(randomGame, config);
           } else {
-            console.error('No game found at random position');
+            console.error('No games found on random page');
           }
         }).catch(function(err) {
-          console.error('Error fetching random game:', err);
+          console.error('Error fetching random page:', err);
         });
       } else {
         console.error('No games found in the index');
       }
     }).catch(function(err) {
-      console.error('Error getting total records:', err);
+      console.error('Error getting total pages:', err);
     });
   });
 }
@@ -68,6 +70,8 @@ function loadJSONForRandomGame(path, callback) {
 
 // Function to display a random game
 function displayRandomGame(game, config) {
+  console.log("Displaying random game:", game.name); // Add this to check which game is shown
+  
   // Create a details element like the ones used for regular games
   const detailsElement = document.createElement('details');
   detailsElement.className = 'game-wrapper';
