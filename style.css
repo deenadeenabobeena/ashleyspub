@@ -733,6 +733,11 @@ body {
     margin-right: 30px;
     size: 50%;
 }
+.attribution p {
+    padding: 5px;
+    font-weight: 700;
+    
+}
 .random-game-btn {
     position: relative;
     background: linear-gradient(135deg, #e63462 0%, #8f1537 100%);
