@@ -140,7 +140,7 @@ function get_widgets(SETTINGS) {
     "refine_categories": panel('Categories')(instantsearch.widgets.refinementList)(
       {
         container: '#facet-categories',
-        collapsible: false,
+        collapsible: true,
         attribute: 'categories',
         operator: 'and',
         showMore: true,
