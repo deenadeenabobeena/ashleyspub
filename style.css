@@ -730,3 +730,30 @@ body {
 .attribution img {
     float: right;
 }
+.random-game-btn {
+    background-color: var(--hl);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 0 13px;
+    height: 47px;
+    font-family: 'nunito_sans', 'Calibri', sans-serif;
+    font-size: 16px !important;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+    cursor: pointer;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    margin-left: 10px;
+    transition: background-color 0.2s;
+}
+
+.random-game-btn:hover {
+    background-color: #007aa3;
+}
+
+@media only screen and (max-width: 899px) {
+    .random-game-btn {
+        height: 37px;
+        font-size: 14px !important;
+    }
+}
