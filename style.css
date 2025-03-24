@@ -741,7 +741,7 @@ body {
     font-weight: 700;
     font-size: 13px !important;
     cursor: pointer;
-    margin-left: 25px;
+    margin-left: 30px;
     transition: transform 0.3s, box-shadow 0.3s;
     clip-path: polygon(
         50% 0%, 
@@ -776,7 +776,7 @@ body {
 }
 
 .random-game-btn::before {
-    content: "d20";
+    content: "Roll!";
     position: absolute;
     top: 50%;
     left: 50%;
