@@ -19,6 +19,7 @@ body {
     letter-spacing: 0.4px;
     line-height: 1;
     background: var(--pale);
+   background-image: url('images/bg2.jpg');
 }
 
 h3 {
