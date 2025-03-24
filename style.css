@@ -323,7 +323,7 @@ body {
 }
 
 .ais-Highlight-highlighted {
-    background: transparent;
+    background: yellow;
     color: var(--test);
     text-decoration: underline;
     font-weight: 700;
