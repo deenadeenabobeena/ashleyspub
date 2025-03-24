@@ -522,7 +522,7 @@ body {
 
 .facet label {
     cursor: pointer;
-    color: var(--main);
+    color: var(--main); /* dropdown menu text */
 }
 
 .ais-HierarchicalMenu-item, .ais-RefinementList-item, .ais-NumericMenu-item {
@@ -579,7 +579,7 @@ body {
 
 .ais-Pagination-item--selected a {
     font-weight: bold;
-    border: 2px solid var(--hl);
+    border: 2px solid var(--main);
 }
 
 .ais-Pagination-list {
