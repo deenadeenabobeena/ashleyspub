@@ -106,6 +106,44 @@
   </script>
 
   <script src="app.js"></script>
+
+<script>
+  // Wait for InstantSearch to be initialized
+  document.addEventListener('DOMContentLoaded', function() {
+    // Give InstantSearch time to render
+    setTimeout(function() {
+      // Function to apply the fix
+      function showAllFacetValues() {
+        // Hide show more buttons
+        const showMoreButtons = document.querySelectorAll('.ais-RefinementList-showMore');
+        showMoreButtons.forEach(button => {
+          button.style.display = 'none';
+        });
+        
+        // Find all facet lists
+        const facetLists = document.querySelectorAll('.ais-RefinementList-list');
+        facetLists.forEach(list => {
+          // Override any height restrictions
+          list.style.maxHeight = 'none';
+          list.style.overflow = 'visible';
+          
+          // Show all items, including hidden ones
+          const items = list.querySelectorAll('.ais-RefinementList-item');
+          items.forEach(item => {
+            item.style.display = 'block';
+          });
+        });
+      }
+      
+      // Apply the fix now
+      showAllFacetValues();
+      
+      // Also apply the fix after each query when results refresh
+      document.addEventListener('render', showAllFacetValues);
+    }, 1000); // Wait 1 second for everything to initialize
+  });
+</script>
+  
 </body>
   <footer>
     <div class="attribution">
