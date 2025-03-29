@@ -928,3 +928,33 @@ body {
   color: #888;
   margin-top: 20px;
 }
+
+/* Add these CSS rules to your stylesheet */
+#facet-sort {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+#facet-sort h3 {
+  margin: 0;
+  padding: 10px;
+}
+
+#facet-sort .ais-SortBy {
+  width: 100%;
+  padding: 0 10px 10px 10px;
+}
+
+#facet-sort .ais-SortBy-select {
+  width: 100%;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  background-color: white;
+}
+
+/* This fixes any dropdown expansion issues */
+#facet-sort .ais-Panel-body {
+  display: block !important;
+  overflow: visible;
+}
