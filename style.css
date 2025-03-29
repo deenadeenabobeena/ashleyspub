@@ -157,7 +157,8 @@ body {
     scrollbar-width: none;
     height: 47px;
     background: var(--main);
-    
+    position: relative;
+  z-index: 50;
     gap: 50px;
     justify-content: center;
 }
