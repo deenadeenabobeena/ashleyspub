@@ -140,6 +140,15 @@ body {
     outline: none;
 }
 
+#facet-sort .sort-by {
+  padding: 8px;
+}
+
+#facet-sort select {
+  width: 100%;
+  padding: 5px;
+}
+
 .facets {
     display: flex;
     flex-direction: row;
