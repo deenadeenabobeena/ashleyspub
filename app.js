@@ -375,4 +375,43 @@ function init(SETTINGS) {
   set_bgg_name();
 }
 
+// Add this right before the loadJSON("config.json", init) line
+document.addEventListener('DOMContentLoaded', function() {
+  // Feedback button functionality 
+  const feedbackButton = document.getElementById('feedback-button');
+  const feedbackPopup = document.getElementById('feedback-popup');
+  
+  if (feedbackButton && feedbackPopup) {
+    const closeButton = feedbackPopup.querySelector('.close');
+    
+    // Open popup when button is clicked
+    feedbackButton.addEventListener('click', function() {
+      feedbackPopup.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    });
+    
+    // Close popup when X is clicked
+    closeButton.addEventListener('click', function() {
+      feedbackPopup.style.display = 'none';
+      document.body.style.overflow = 'auto';
+    });
+    
+    // Close popup when clicking outside the content
+    feedbackPopup.addEventListener('click', function(event) {
+      if (event.target === feedbackPopup) {
+        feedbackPopup.style.display = 'none';
+        document.body.style.overflow = 'auto';
+      }
+    });
+    
+    // Close popup when ESC key is pressed
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape' && feedbackPopup.style.display === 'flex') {
+        feedbackPopup.style.display = 'none';
+        document.body.style.overflow = 'auto';
+      }
+    });
+  }
+});
+
 loadJSON("config.json", init);
