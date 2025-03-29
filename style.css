@@ -731,24 +731,71 @@
      margin-top: 40px;
  }
  
- .attribution {
-     background-color: black;
-     width: 100%;
-    position: fixed; /* Changed from absolute */
-     bottom: 0;
-     left: 0;
- 
-     padding: 0px;
- }
- .attribution img {
-     float: right;
-     margin-right: 30px;
-     max-width: 50%;
- }
- .attribution p {
-     padding-top: 5px;
-     font-weight: 700;
-     margin: 0;
+.attribution {
+    background-color: black;
+    width: 100%;
+    padding: 8px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    box-sizing: border-box;
+}
+
+/* Left side with text and button */
+.attribution-content {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px; /* Space between elements */
+}
+
+.attribution p {
+    color: white;
+    font-weight: 700;
+    margin: 0;
+    padding: 0;
+}
+
+#feedback-button {
+    background-color: #f5a623;
+    color: black;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    white-space: nowrap;
+}
+
+#feedback-button:hover {
+    background-color: #f7b84c;
+}
+
+/* Right side with logo */
+.attribution img {
+    max-height: 28px;
+    margin: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .attribution {
+        flex-direction: column;
+        padding: 10px;
+        gap: 10px;
+    }
+    
+    .attribution-content {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .attribution img {
+        margin-top: 8px;
+    }
+}
  
  }
  .random-game-btn {
