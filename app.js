@@ -82,7 +82,7 @@ function on_render() {
     }
     close.addEventListener("click", close_details);
     close.addEventListener("keypress", close_details);
-    elem.appendChild(close);
+    elem.querySelector('.game-details-wrapper').appendChild(close);
 
     elem.addEventListener("click", function(event){
       event.stopPropagation();
