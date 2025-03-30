@@ -295,39 +295,7 @@ details > summary:first-of-type {
   margin-top: 20px;
 }
 
-@media only screen and (max-width: 899px) {
-    .attribution {
-        padding: 8px 15px;
-        height: 60px;
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    
-    .attribution-content {
-        width: 100%;
-        margin-bottom: 5px;
-        justify-content: space-between;
-    }
-    
-    .attribution-content p {
-        font-size: 10px;
-        padding-right: 10px;
-        max-width: 80%;
-    }
-    
-    #feedback-button {
-        margin-left: 0;
-        padding: 4px 8px;
-        font-size: 10px;
-    }
-    
-    .attribution img {
-        max-height: 18px;
-    }
-    
-    body {
-        padding-bottom: 60px;
-    }
+
 
 
 /* =============================================
