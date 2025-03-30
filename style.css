@@ -123,6 +123,30 @@ details > summary:first-of-type {
     display: none;
 }
 
+/* Sort Section */
+.sort-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 0;
+  background-color: #f0f0f0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.sort-section label {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--main);
+  margin-right: 10px;
+  display: block; /* Make label visible */
+}
+
+.sort-by {
+  max-width: 220px;
+  flex-grow: 0;
+  height: 38px;
+}
+
 /* Filter Facets */
 .facets {
     display: flex;
