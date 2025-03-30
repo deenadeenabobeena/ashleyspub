@@ -129,7 +129,7 @@ details > summary:first-of-type {
   align-items: center;
  justify-content: flex-end; /* Right-align */
   padding: 6px 20px; /* Reduced padding */
-  background-color: #fafafa; /* Lighter background, closer to main background */
+  background-color: black; 
   border-bottom: 1px solid rgba(0, 0, 0, 0.05); /* Subtler border */
 }
 
