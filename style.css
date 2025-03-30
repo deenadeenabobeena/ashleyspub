@@ -175,6 +175,7 @@ details > summary:first-of-type {
     display: flex;
     justify-content: space-between;
     align-items: center;
+   box-sizing: border-box;
 }
 
 .attribution-content {
@@ -185,13 +186,15 @@ details > summary:first-of-type {
 .attribution img {
     max-height: 24px;
     width: auto;
-    margin-right: 10px; /* Add right margin to prevent cutoff */
+    margin-right: 20px; /* Add right margin to prevent cutoff */
     max-width: 100px;
 }
 
 .attribution-content p {
     margin: 0;
     font-size: 12px;
+   color: white; 
+    max-width: 90%;
 }
 
 /* Feedback Button */
