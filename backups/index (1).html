@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+ <html>
+ <head>
+   <title>Ashley's Pub</title>
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=0.7">
+   <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+   <script src="https://cdn.jsdelivr.net/npm/algoliasearch@4.1.0/dist/algoliasearch-lite.umd.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@4.3.1/dist/instantsearch.production.min.js"></script>
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7.1.1/themes/reset-min.css">
+   <link rel="stylesheet" href="style.css">
+   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,700&amp;display=swap">
+ </head>
+ <body>
+   <header class="search">
+     <img class="logo" src="images/favicon.ico" height="36" width="36">
+     <div class="search-box" id="search-box"></div>
+     <label>Sort by:</label>
+     <div class="sort-by" id="sort-by"></div>
+     <div class="stats" id="stats"></div>
+    <button id="random-game-button" class="random-game-btn" title="Get Random Game"></button>
+   </header>
+   <article class="wrapper">
+     <aside class="facets">
+       <div class="facet" id="facet-players" tabindex="0"></div>
+       <div class="facet" id="facet-playing-time" tabindex="0"></div>
+       <div class="facet" id="facet-weight" tabindex="0"></div>
+       <div class="facet" id="facet-categories" tabindex="0"></div>
+       <div class="facet" id="facet-mechanics" tabindex="0"></div>
+       <div class="facet" id="facet-min-age" tabindex="0"></div>
+       <div class="facet" id="facet-previous-players" tabindex="0"></div>
+       <div class="facet" id="facet-numplays" tabindex="0"></div>
+       <div class="clear-all" id="clear-all"></div>
+     </aside>
+     <main class="results">
+       <div class="hits" id="hits"></div>
+       <div id="pagination"></div>
+     </main>
+   </article>
+ 
+   <script type="text/html" id="hits-template">
+     <details class="game-wrapper">
+       <summary>
+         <div class="game">
+           <img src="{{{ image }}}" alt="{{{ name }}}">
+         </div>
+         <div class="gamename">{{{ name }}}</div>
+       </summary>
+       <div class="game-details">
+         <div class="game-details-wrapper">
+         <h2 class="heading">
+           <a href="https://boardgamegeek.com/boardgame/{{{ id }}}">
+             {{# helpers.highlight }}{ "attribute": "name" }{{/ helpers.highlight }}
+           </a>
+         </h2>
+         <dl class="properties-header">
+           <div>
+             <img src="images/ico-players.svg" title="Supported players">
+             <dd>{{{ players_str }}}</dd>
+           </div>
+           <div>
+             <img src="images/ico-rating.svg" title="Rating">
+             <dd>{{ rating }}</dd>
+           </div>
+           <div>
+             <img src="images/ico-time.svg" title="Playing time">
+             <dd>{{ playing_time }}</dd>
+           </div>
+           <div>
+             <img src="images/ico-complexity.svg" title="Complexity">
+             <dd>{{ weight }} <em>({{ weight_rating }})</em></dd>
+           </div>
+         </dl>
+         <p class="description">
+           {{# helpers.highlight }}{ "attribute": "description" }{{/ helpers.highlight }}
+         </p>
+         <dl class="properties-footer">
+           <div>
+             <span>Categories:</span>
+             <dd>
+               {{# categories_str }}{{ categories_str }}{{/ categories_str }}
+               {{^ categories_str}}<em>No categories</em>{{/ categories_str }}
+             </dd>
+           </div>
+           <div>
+             <span>Mechanics:</span>
+             <dd>
+               {{# mechanics_str }}{{ mechanics_str }}{{/ mechanics_str }}
+               {{^ mechanics_str}}<em>No mechanics</em>{{/ mechanics_str }}
+             </dd>
+           </div>
+           {{# has_expansions }}
+           <div class="expansions">
+             <span>Expansions owned:</span>
+             <dd><ul>
+               {{# expansions }}
+                 <li><a href="https://boardgamegeek.com/boardgame/{{{ id }}}">{{ name }}</a></li>
+               {{/ expansions }}
+             </ul></dd>
+           </div>
+           {{/ has_expansions }}
+         </dl>
+       </div>
+       </div>
+     </details>
+   </script>
+ 
+   <div id="feedback-popup" class="feedback-popup">
+   <div class="feedback-content">
+     <div class="close">×</div>
+     <h2>Got feedback?</h2>
+     <div class="beer-can">
+       <img src="images/beer-can.png" alt="Beer Can">
+       <div class="beer-label">
+        
+         <dl>
+         <dt>Step 1: </dt>
+           <dd>Buy a cider from the fridge </dd>
+           <dt>Step 2: </dt>
+           <dd>Write your feedback directly on the can! </dd>
+           <dt>Step 3: </dt>
+           <dd>Come find me and we'll talk about about it <3 </dd>
+         
+         </dl>
+       </div>
+     </div>
+     <p class="feedback-note">The best feedback comes cold and carbonated.</p>
+   </div>
+ </div>
+ 
+   <script src="app.js"></script>
+   <script src="scripts/random-game.js"></script>
+ 
+ </body>
+   <footer>
+     
+     <div class="attribution">
+      <div class="attribution-content">
+      <p> This project was fueled by algolia, github, six cups of coffee and Deena's incredibly deprecated knowledge base. </p>
+       <button id="feedback-button">Give Feedback</button>
+      
+     
+  
+ </div>
+       <img src= "images/Algolia-logo-white.png" style="width:100px;height:24px;">
+     </div>
+   </footer>
+ </html>
