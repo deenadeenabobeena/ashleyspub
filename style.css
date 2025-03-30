@@ -185,6 +185,8 @@ details > summary:first-of-type {
 .attribution img {
     max-height: 24px;
     width: auto;
+    margin-right: 10px; /* Add right margin to prevent cutoff */
+    max-width: 100px;
 }
 
 .attribution-content p {
