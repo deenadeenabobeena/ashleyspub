@@ -228,7 +228,7 @@ details > summary:first-of-type {
 }
 
 #feedback-button {
-    background-color: var(--hl);
+    background-color: var(--main);
     color: white;
     border: none;
     border-radius: 4px;
@@ -241,7 +241,7 @@ details > summary:first-of-type {
 }
 
 #feedback-button:hover {
-  background-color: #f7b84c;
+  background-color: var(--hl);
 }
 
 /* Feedback Popup */
