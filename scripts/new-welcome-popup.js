@@ -205,79 +205,162 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
     
-    // Apply complexity filter if slider has been moved
-    const complexitySlider = document.getElementById('complexity-slider');
-    if (complexitySlider) {
-      const complexityValue = parseInt(complexitySlider.value);
-      const complexityLabels = ['Light', 'Light Medium', 'Medium', 'Medium Heavy', 'Heavy'];
-      const selectedComplexity = complexityLabels[complexityValue - 1];
-      
-      // Find the complexity/weight facet
-      const weightFacet = document.getElementById('facet-weight');
-      if (weightFacet) {
-        setTimeout(() => {
-          const weightItems = weightFacet.querySelectorAll('.ais-RefinementList-item');
-          weightItems.forEach(item => {
-            const label = item.querySelector('.ais-RefinementList-label');
-            if (label && label.textContent.trim() === selectedComplexity) {
-              // This is the complexity level we want
-              const checkbox = item.querySelector('.ais-RefinementList-checkbox');
-              if (checkbox && !checkbox.checked) {
-                // Click the label to check the checkbox
-                label.click();
-              }
-            }
-          });
-        }, 500);
-      }
+    // Clear any existing refinements first
+    const clearRefinementsButton = document.querySelector('.ais-ClearRefinements-button');
+    if (clearRefinementsButton && !clearRefinementsButton.disabled) {
+      clearRefinementsButton.click();
     }
     
-    // Apply player count filter if selected
-    if (playerCount) {
-      // Find the players facet
-      const playersFacet = document.getElementById('facet-players');
-      if (playersFacet) {
-        // We need to find the correct refinement that matches our player count
-        // and has "Best with" in its text
-        setTimeout(() => {
-          const allPlayerItems = playersFacet.querySelectorAll('.ais-HierarchicalMenu-item');
-          
-          // First try to find Best with X players
-          let bestWithFound = false;
-          allPlayerItems.forEach(item => {
-            const label = item.querySelector('.ais-HierarchicalMenu-label');
-            if (label && label.textContent.trim() === playerCount) {
-              // This is the top-level item for our player count
-              // Now we need to expand this item to see its children
-              const link = item.querySelector('.ais-HierarchicalMenu-link');
-              if (link) {
-                link.click();
-                
-                // Now look for the "Best with X" child
-                setTimeout(() => {
-                  const childItems = item.querySelectorAll('.ais-HierarchicalMenu-item--child');
-                  childItems.forEach(child => {
-                    const childLabel = child.querySelector('.ais-HierarchicalMenu-label');
-                    if (childLabel && childLabel.textContent.includes('Best with')) {
-                      // This is what we want
-                      const childLink = child.querySelector('.ais-HierarchicalMenu-link');
-                      if (childLink) {
-                        childLink.click();
-                        bestWithFound = true;
-                      }
-                    }
-                  });
-                  
-                  // If we couldn't find "Best with", just select the parent player count
-                  if (!bestWithFound) {
-                    link.click();
-                  }
-                }, 100);
-              }
-            }
-          });
-        }, 500);
+    // Wait for refinements to clear before applying new ones
+    setTimeout(() => {
+      // PLAYER COUNT FILTER
+      if (playerCount) {
+        applyPlayerCountFilter(playerCount);
       }
+      
+      // COMPLEXITY FILTER
+      applyComplexityFilter();
+    }, 300);
+  }
+
+  // Function to apply player count filter
+  function applyPlayerCountFilter(playerCount) {
+    console.log("Applying player count filter:", playerCount);
+    
+    // Find the players facet
+    const playersFacet = document.getElementById('facet-players');
+    if (!playersFacet) {
+      console.log("Players facet not found");
+      return;
+    }
+    
+    // First, check if the facet is already expanded
+    const panelBody = playersFacet.querySelector('.ais-Panel-body');
+    if (panelBody && panelBody.style.display !== 'block') {
+      // Expand the facet by simulating a click or setting display
+      playersFacet.click();
+      // Or directly set the style
+      panelBody.style.display = 'block';
+    }
+    
+    // Try different approaches to select player count
+    
+    // 1. First look for hierarchical menu items
+    const hierarchicalItems = playersFacet.querySelectorAll('.ais-HierarchicalMenu-item');
+    if (hierarchicalItems.length > 0) {
+      console.log("Using hierarchical menu approach");
+      
+      let targetItem = null;
+      
+      // Find the top level item matching our player count
+      hierarchicalItems.forEach(item => {
+        const label = item.querySelector('.ais-HierarchicalMenu-label');
+        if (label && label.textContent.trim() === playerCount) {
+          targetItem = item;
+        }
+      });
+      
+      if (targetItem) {
+        // First click the main player count to expand it
+        const mainLink = targetItem.querySelector('.ais-HierarchicalMenu-link');
+        if (mainLink) {
+          console.log("Clicking player count:", playerCount);
+          mainLink.click();
+          
+          // Wait for submenu to appear
+          setTimeout(() => {
+            // Try to find "Best with X" option
+            const childItems = targetItem.querySelectorAll('.ais-HierarchicalMenu-item--child');
+            let bestWithFound = false;
+            
+            childItems.forEach(child => {
+              const childLabel = child.querySelector('.ais-HierarchicalMenu-label');
+              if (childLabel && childLabel.textContent.includes('Best with')) {
+                const childLink = child.querySelector('.ais-HierarchicalMenu-link');
+                if (childLink) {
+                  console.log("Clicking 'Best with' option");
+                  childLink.click();
+                  bestWithFound = true;
+                }
+              }
+            });
+            
+            // If we couldn't find "Best with", just use the main player count
+            if (!bestWithFound) {
+              console.log("No 'Best with' option found, using main player count");
+              mainLink.click();
+            }
+          }, 300);
+        }
+      }
+      return;
+    }
+    
+    // 2. Alternative: check for standard refinement list items
+    const refinementItems = playersFacet.querySelectorAll('.ais-RefinementList-item');
+    if (refinementItems.length > 0) {
+      console.log("Using refinement list approach");
+      
+      refinementItems.forEach(item => {
+        const label = item.querySelector('.ais-RefinementList-label');
+        if (label && label.textContent.includes(playerCount)) {
+          console.log("Found matching player count in refinement list");
+          label.click();
+          return;
+        }
+      });
+    }
+  }
+
+  // Function to apply complexity filter
+  function applyComplexityFilter() {
+    const complexitySlider = document.getElementById('complexity-slider');
+    if (!complexitySlider) {
+      console.log("Complexity slider not found");
+      return;
+    }
+    
+    const complexityValue = parseInt(complexitySlider.value);
+    const complexityLabels = ['Light', 'Light Medium', 'Medium', 'Medium Heavy', 'Heavy'];
+    const selectedComplexity = complexityLabels[complexityValue - 1];
+    
+    console.log("Applying complexity filter:", selectedComplexity);
+    
+    // Find the complexity/weight facet
+    const weightFacet = document.getElementById('facet-weight');
+    if (!weightFacet) {
+      console.log("Weight facet not found");
+      return;
+    }
+    
+    // First, check if the facet is already expanded
+    const panelBody = weightFacet.querySelector('.ais-Panel-body');
+    if (panelBody && panelBody.style.display !== 'block') {
+      // Expand the facet by simulating a click or setting display
+      weightFacet.click();
+      // Or directly set the style
+      panelBody.style.display = 'block';
+    }
+    
+    // Look for the matching complexity label in the refinement list
+    const weightItems = weightFacet.querySelectorAll('.ais-RefinementList-item');
+    let found = false;
+    
+    weightItems.forEach(item => {
+      const label = item.querySelector('.ais-RefinementList-label');
+      const labelText = label ? label.textContent.trim() : '';
+      
+      if (labelText === selectedComplexity) {
+        console.log("Found matching complexity:", labelText);
+        
+        // Click the label to select it
+        label.click();
+        found = true;
+      }
+    });
+    
+    if (!found) {
+      console.log("Could not find matching complexity label");
     }
   }
   
