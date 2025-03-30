@@ -4,8 +4,117 @@ document.addEventListener('DOMContentLoaded', function() {
   const hasVisitedBefore = localStorage.getItem('hasVisitedBefore');
   
   if (!hasVisitedBefore) {
-    // Add welcome popup HTML to the page
-    const welcomePopupHTML = document.getElementById('welcome-popup-template').innerHTML;
+    // Define the welcome popup HTML directly
+    const welcomePopupHTML = `
+      <div id="welcome-popup" class="welcome-popup">
+        <div class="welcome-content">
+          <div class="close">×</div>
+          
+          <!-- Step 1: Welcome and player count -->
+          <div id="welcome-step-1" class="welcome-step">
+            <h2>Welcome to Boardom's End!</h2>
+            <p>Let's find the perfect game for your group. First, tell us how many players you have.</p>
+            
+            <div class="welcome-form">
+              <div class="welcome-form-group">
+                <label for="player-count">Number of Players:</label>
+                <select id="player-count">
+                  <option value="">Any number of players</option>
+                  <option value="1">1 player</option>
+                  <option value="2">2 players</option>
+                  <option value="3">3 players</option>
+                  <option value="4">4 players</option>
+                  <option value="5">5 players</option>
+                  <option value="6">6 players</option>
+                  <option value="7">7 players</option>
+                  <option value="8">8+ players</option>
+                </select>
+              </div>
+            </div>
+            
+            <div class="progress-dots">
+              <div class="dot active"></div>
+              <div class="dot"></div>
+              <div class="dot"></div>
+            </div>
+            
+            <div class="welcome-buttons">
+              <button id="skip-welcome" class="welcome-button secondary">Skip Setup</button>
+              <button id="next-step-1" class="welcome-button">Next</button>
+            </div>
+          </div>
+          
+          <!-- Step 2: Game category preferences -->
+          <div id="welcome-step-2" class="welcome-step" style="display: none;">
+            <h2>What type of games do you enjoy?</h2>
+            <p>Select a category that interests your group.</p>
+            
+            <div class="welcome-form">
+              <div class="welcome-form-group">
+                <label for="game-category">Game Category:</label>
+                <select id="game-category">
+                  <option value="">Any category</option>
+                  <option value="Strategy">Strategy</option>
+                  <option value="Party Game">Party Game</option>
+                  <option value="Card Game">Card Game</option>
+                  <option value="Cooperative">Cooperative</option>
+                  <option value="Family">Family</option>
+                  <option value="Dice">Dice</option>
+                  <option value="Fantasy">Fantasy</option>
+                  <option value="Economic">Economic</option>
+                  <option value="Wargame">Wargame</option>
+                </select>
+              </div>
+            </div>
+            
+            <div class="progress-dots">
+              <div class="dot"></div>
+              <div class="dot active"></div>
+              <div class="dot"></div>
+            </div>
+            
+            <div class="welcome-buttons">
+              <button id="prev-step-2" class="welcome-button secondary">Back</button>
+              <button id="next-step-2" class="welcome-button">Next</button>
+            </div>
+          </div>
+          
+          <!-- Step 3: Playing time -->
+          <div id="welcome-step-3" class="welcome-step" style="display: none;">
+            <h2>How much time do you have?</h2>
+            <p>Select how long you'd like to play.</p>
+            
+            <div class="welcome-form">
+              <div class="welcome-form-group">
+                <label for="playing-time">Playing Time:</label>
+                <select id="playing-time">
+                  <option value="">Any length</option>
+                  <option value="< 30min">Less than 30 minutes</option>
+                  <option value="30min - 1h">30 minutes to 1 hour</option>
+                  <option value="1-2h">1-2 hours</option>
+                  <option value="2-3h">2-3 hours</option>
+                  <option value="3-4h">3-4 hours</option>
+                  <option value="> 4h">More than 4 hours</option>
+                </select>
+              </div>
+            </div>
+            
+            <div class="progress-dots">
+              <div class="dot"></div>
+              <div class="dot"></div>
+              <div class="dot active"></div>
+            </div>
+            
+            <div class="welcome-buttons">
+              <button id="prev-step-3" class="welcome-button secondary">Back</button>
+              <button id="apply-filters" class="welcome-button">Find Games</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+    
+    // Add the HTML to the page
     document.body.insertAdjacentHTML('beforeend', welcomePopupHTML);
     
     // Initialize the welcome popup functionality
@@ -65,58 +174,63 @@ function initWelcomePopup() {
     });
   }
   
+  // Function to simulate clicking on a facet label
+  function clickFacetLabel(selector, targetText) {
+    // Wait a short time to ensure facets are loaded
+    setTimeout(() => {
+      const elements = document.querySelectorAll(selector);
+      
+      // For debugging
+      console.log(`Looking for filter with text containing "${targetText}" among ${elements.length} elements`);
+      
+      let found = false;
+      elements.forEach(element => {
+        const text = element.textContent.trim();
+        console.log(`Checking element with text: "${text}"`);
+        
+        if (text.includes(targetText)) {
+          console.log(`Found matching element: "${text}"`);
+          element.click();
+          found = true;
+        }
+      });
+      
+      if (!found) {
+        console.log(`No element found with text containing "${targetText}"`);
+      }
+    }, 500); // Wait 500ms to ensure UI is loaded
+  }
+  
   // Apply filters function
   function applyFilters() {
-    // Get the instantsearch instance
-    const searchPage = window.search;
-    
-    if (!searchPage) {
-      console.error('Search instance not found');
-      closeWelcomePopup();
-      return;
-    }
-    
-    // Apply player count filter
-    if (playerCount.value) {
-      // Convert the player count to the right format for refinement
-      const playerValue = playerCount.value;
-      // Apply the filter
-      searchPage.addWidgets([
-        instantsearch.widgets.configure({
-          hierarchicalFacetsRefinements: {
-            'players.level1': [playerValue]
-          }
-        })
-      ]);
-    }
-    
-    // Apply category filter
-    if (gameCategory.value) {
-      searchPage.addWidgets([
-        instantsearch.widgets.configure({
-          facetsRefinements: {
-            categories: [gameCategory.value]
-          }
-        })
-      ]);
-    }
-    
-    // Apply playing time filter
-    if (playingTime.value) {
-      searchPage.addWidgets([
-        instantsearch.widgets.configure({
-          facetsRefinements: {
-            playing_time: [playingTime.value]
-          }
-        })
-      ]);
-    }
-    
-    // Close the popup
+    // Close the popup first
     closeWelcomePopup();
     
-    // Refresh the search to apply filters
-    searchPage.refresh();
+    // Short delay to ensure facets are loaded
+    setTimeout(() => {
+      console.log("Applying filters...");
+      
+      // Apply player count filter if selected
+      if (playerCount.value) {
+        console.log(`Applying player filter: ${playerCount.value}`);
+        // Find and click the player count filter
+        clickFacetLabel('#facet-players .ais-HierarchicalMenu-label', playerCount.value);
+      }
+      
+      // Apply category filter if selected
+      if (gameCategory.value) {
+        console.log(`Applying category filter: ${gameCategory.value}`);
+        // Find and click the category filter
+        clickFacetLabel('#facet-categories .ais-RefinementList-label', gameCategory.value);
+      }
+      
+      // Apply playing time filter if selected
+      if (playingTime.value) {
+        console.log(`Applying time filter: ${playingTime.value}`);
+        // Find and click the playing time filter
+        clickFacetLabel('#facet-playing-time .ais-RefinementList-label', playingTime.value);
+      }
+    }, 500);
   }
   
   // Event listeners
@@ -163,78 +277,30 @@ function initWelcomePopup() {
   });
 }
 
-// Modified init function to expose the search instance
-function modifiedInit(SETTINGS) {
-  // Original init code...
-  var configIndexName = '';
-  switch (SETTINGS.algolia.sort_by) {
-    case undefined:
-    case 'asc(name)':
-      configIndexName = SETTINGS.algolia.index_name;
-      break;
-    case 'asc(rank)':
-    case 'desc(rating)':
-      configIndexName = SETTINGS.algolia.index_name + '_rank_ascending';
-      break;
-    case 'desc(numrated)':
-      configIndexName = SETTINGS.algolia.index_name + '_numrated_descending';
-      break;
-    case 'desc(numowned)':
-      configIndexName = SETTINGS.algolia.index_name + '_numowned_descending';
-      break;
-    default:
-      console.error("The provided config value for algolia.sort_by was invalid: " + SETTINGS.algolia.sort_by);
-      break;
-  }
-
-  const search = instantsearch({
-    indexName: configIndexName,
-    searchClient: algoliasearch(
-      SETTINGS.algolia.app_id,
-      SETTINGS.algolia.api_key_search_only
-    ),
-    routing: true
-  });
-
-  // Expose the search instance globally
-  window.search = search;
-
-  search.on('render', on_render);
-
-  var widgets = get_widgets(SETTINGS);
-  search.addWidgets([
-    widgets["search"],
-    widgets["sort"],
-    widgets["clear"],
-    widgets["refine_categories"],
-    widgets["refine_mechanics"],
-    widgets["refine_players"],
-    widgets["refine_weight"],
-    widgets["refine_playingtime"],
-    widgets["refine_min_age"],
-    widgets["hits"],
-    widgets["stats"],
-    widgets["pagination"],
-    widgets["refine_previousplayers"],
-    widgets["refine_numplays"]
-  ]);
-
-  search.start();
-
-  function set_bgg_name() {
-    var title = SETTINGS.project.title;
-    if (!title) {
-      title = "All " + SETTINGS.boardgamegeek.user_name + "'s boardgames";
-    }
-
-    var title_tag = document.getElementsByTagName("title")[0];
-    title_tag.innerHTML = title;
-  }
-  set_bgg_name();
-  
-  return search;
+// Function to reset the welcome popup (for testing)
+function resetWelcomePopup() {
+  localStorage.removeItem('hasVisitedBefore');
+  window.location.reload();
 }
 
-// Replace the original init function
-window.originalInit = init;
-window.init = modifiedInit;
+// Add this code to create a reset button (useful for testing)
+document.addEventListener('DOMContentLoaded', function() {
+  // Create a small button in the corner to reset the welcome popup
+  const resetButton = document.createElement('button');
+  resetButton.innerHTML = 'Reset Welcome';
+  resetButton.style.position = 'fixed';
+  resetButton.style.bottom = '60px';
+  resetButton.style.right = '10px';
+  resetButton.style.zIndex = '999';
+  resetButton.style.fontSize = '12px';
+  resetButton.style.padding = '5px';
+  resetButton.style.background = '#f1f1f1';
+  resetButton.style.border = '1px solid #ccc';
+  resetButton.style.borderRadius = '4px';
+  resetButton.style.cursor = 'pointer';
+  resetButton.style.opacity = '0.7';
+  
+  resetButton.addEventListener('click', resetWelcomePopup);
+  
+  document.body.appendChild(resetButton);
+});
