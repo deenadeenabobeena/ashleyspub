@@ -39,7 +39,6 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
             
             <div class="welcome-buttons">
-              <button id="skip-welcome" class="welcome-button secondary">Skip Setup</button>
               <button id="next-step-1" class="welcome-button">Next</button>
             </div>
           </div>
@@ -132,7 +131,6 @@ function initWelcomePopup() {
   
   // Elements
   const closeButton = welcomePopup.querySelector('.close');
-  const skipButton = document.getElementById('skip-welcome');
   const nextStep1Button = document.getElementById('next-step-1');
   const nextStep2Button = document.getElementById('next-step-2');
   const prevStep2Button = document.getElementById('prev-step-2');
@@ -236,10 +234,6 @@ function initWelcomePopup() {
   // Event listeners
   if (closeButton) {
     closeButton.addEventListener('click', closeWelcomePopup);
-  }
-  
-  if (skipButton) {
-    skipButton.addEventListener('click', closeWelcomePopup);
   }
   
   if (nextStep1Button) {
