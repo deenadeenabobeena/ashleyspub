@@ -131,9 +131,118 @@
      <p class="feedback-note">The best feedback comes cold and carbonated.</p>
    </div>
  </div>
+
+  <!-- Welcome Popup Structure -->
+<div id="welcome-popup" class="welcome-popup">
+  <div class="welcome-content">
+    <div class="close">×</div>
+    
+    <!-- Step 1: Welcome and player count -->
+    <div id="welcome-step-1" class="welcome-step">
+      <h2>Welcome to Boardom's End!</h2>
+      <p>Let's find the perfect game for your group. First, tell us how many players you have.</p>
+      
+      <div class="welcome-form">
+        <div class="welcome-form-group">
+          <label for="player-count">Number of Players:</label>
+          <select id="player-count">
+            <option value="">Any number of players</option>
+            <option value="1">1 player</option>
+            <option value="2">2 players</option>
+            <option value="3">3 players</option>
+            <option value="4">4 players</option>
+            <option value="5">5 players</option>
+            <option value="6">6 players</option>
+            <option value="7">7 players</option>
+            <option value="8">8+ players</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="progress-dots">
+        <div class="dot active"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+      
+      <div class="welcome-buttons">
+        <button id="skip-welcome" class="welcome-button secondary">Skip Setup</button>
+        <button id="next-step-1" class="welcome-button">Next</button>
+      </div>
+    </div>
+    
+    <!-- Step 2: Game category preferences -->
+    <div id="welcome-step-2" class="welcome-step" style="display: none;">
+      <h2>What type of games do you enjoy?</h2>
+      <p>Select a category that interests your group.</p>
+      
+      <div class="welcome-form">
+        <div class="welcome-form-group">
+          <label for="game-category">Game Category:</label>
+          <select id="game-category">
+            <option value="">Any category</option>
+            <option value="Strategy">Strategy</option>
+            <option value="Party Game">Party Game</option>
+            <option value="Card Game">Card Game</option>
+            <option value="Cooperative">Cooperative</option>
+            <option value="Family">Family</option>
+            <option value="Dice">Dice</option>
+            <option value="Fantasy">Fantasy</option>
+            <option value="Economic">Economic</option>
+            <option value="Wargame">Wargame</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="progress-dots">
+        <div class="dot"></div>
+        <div class="dot active"></div>
+        <div class="dot"></div>
+      </div>
+      
+      <div class="welcome-buttons">
+        <button id="prev-step-2" class="welcome-button secondary">Back</button>
+        <button id="next-step-2" class="welcome-button">Next</button>
+      </div>
+    </div>
+    
+    <!-- Step 3: Playing time -->
+    <div id="welcome-step-3" class="welcome-step" style="display: none;">
+      <h2>How much time do you have?</h2>
+      <p>Select how long you'd like to play.</p>
+      
+      <div class="welcome-form">
+        <div class="welcome-form-group">
+          <label for="playing-time">Playing Time:</label>
+          <select id="playing-time">
+            <option value="">Any length</option>
+            <option value="< 30min">Less than 30 minutes</option>
+            <option value="30min - 1h">30 minutes to 1 hour</option>
+            <option value="1-2h">1-2 hours</option>
+            <option value="2-3h">2-3 hours</option>
+            <option value="3-4h">3-4 hours</option>
+            <option value="> 4h">More than 4 hours</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="progress-dots">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot active"></div>
+      </div>
+      
+      <div class="welcome-buttons">
+        <button id="prev-step-3" class="welcome-button secondary">Back</button>
+        <button id="apply-filters" class="welcome-button">Find Games</button>
+      </div>
+    </div>
+  </div>
+</div>
  
    <script src="app.js"></script>
    <script src="scripts/random-game.js"></script>
+  <script src="scripts/welcome-popup.js"></script>
  
  </body>
 <footer>
