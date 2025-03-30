@@ -136,7 +136,7 @@ details > summary:first-of-type {
 .sort-section label {
   font-size: 13px; /* Smaller font */
   font-weight: 400; /* Less bold */
-  color: var(--main);
+  color: var(--pale);
   margin-right: 8px;
   display: block; /* Make label visible */
 }
