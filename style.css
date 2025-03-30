@@ -318,6 +318,22 @@ details > summary:first-of-type {
   color: #666;
 }
 
+.beer-label dl {
+  margin: 15px 0;
+}
+
+.beer-label dt {
+  font-weight: bold;
+  margin-top: 12px; /* Adds space between items */
+  margin-bottom: 4px; /* Adds space between the term and description */
+}
+
+.beer-label dd {
+  margin-left: 10px; /* Reduces the indent (default is usually 40px) */
+  line-height: 1.4; /* Improves readability of the description text */
+  margin-bottom: 8px; /* Adds space after each description */
+}
+
 .feedback-note {
   font-style: italic;
   color: #888;
