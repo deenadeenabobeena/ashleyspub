@@ -171,20 +171,15 @@ details > summary:first-of-type {
     position: fixed;
     bottom: 0;
     left: 0;
-    padding: 10px 20px;
+    padding: 8px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 50px;
-    box-sizing: border-box;
-    z-index: 100;
 }
 
 .attribution-content {
     display: flex;
     align-items: center;
-    color: white;
-    width: 75%;
 }
 
 .attribution img {
@@ -194,7 +189,6 @@ details > summary:first-of-type {
 
 .attribution-content p {
     margin: 0;
-    padding-right: 20px;
     font-size: 12px;
 }
 
@@ -209,9 +203,8 @@ details > summary:first-of-type {
     color: white;
     border: none;
     border-radius: 4px;
-    padding: 6px 12px;
+    padding: 5px 10px;
     cursor: pointer;
-    font-family: 'nunito_sans', 'Calibri', sans-serif;
     font-size: 12px;
     font-weight: 600;
     margin-left: 15px;
