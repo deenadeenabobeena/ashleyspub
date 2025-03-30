@@ -271,10 +271,43 @@ function initWelcomePopup() {
   });
 }
 
+// Function to clear all active filters
+function clearAllFilters() {
+  // Find and click the "Clear all" button if it exists and is visible
+  const clearAllButton = document.querySelector('#clear-all .ais-ClearRefinements-button:not(.ais-ClearRefinements-button--disabled)');
+  if (clearAllButton) {
+    clearAllButton.click();
+    console.log('Cleared all filters');
+  } else {
+    console.log('No active filters to clear');
+  }
+  
+  // Clear the search box input
+  const searchInput = document.querySelector('.ais-SearchBox-input');
+  if (searchInput) {
+    searchInput.value = '';
+    
+    // Create and dispatch an input event to trigger the search update
+    const inputEvent = new Event('input', { bubbles: true });
+    searchInput.dispatchEvent(inputEvent);
+    
+    console.log('Cleared search box');
+  }
+}
+
 // Function to reset the welcome popup (for testing)
 function resetWelcomePopup() {
+  // Clear all filters and search box first
+  clearAllFilters();
+  
+  // Remove the hasVisitedBefore flag to show the welcome popup again
   localStorage.removeItem('hasVisitedBefore');
-  window.location.reload();
+  
+  // Short delay to ensure filters are cleared before reloading
+  setTimeout(() => {
+    // Reload the page to show the welcome popup
+    window.location.reload();
+  }, 300);
 }
 
 // Add this code to create a reset button (useful for testing)
