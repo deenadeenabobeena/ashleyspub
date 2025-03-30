@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
       <div class="welcome-content">
         <div class="close">×</div>
         <h2>Welcome to Boardom's End!</h2>
-        <p>Find the perfect game for your next game night with our curated collection. Let us help you discover games tailored to your group.</p>
+        <p>Find the perfect game in our collection. Let us help you discover games tailored to your group.</p>
         
         <div class="player-selector">
           <h3>How many players will be joining?</h3>
