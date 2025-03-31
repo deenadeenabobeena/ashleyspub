@@ -32,17 +32,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 </select>
               </div>
               
-              <!-- Replaced slider with dropdown for complexity -->
+              <!-- Complexity selection -->
               <div class="welcome-form-group">
-                <label for="complexity-select">Game Complexity:</label>
-                <select id="complexity-select">
-                  <option value="">Any complexity</option>
-                  <option value="Light">Light</option>
-                  <option value="Light Medium">Light Medium</option>
-                  <option value="Medium">Medium</option>
-                  <option value="Medium Heavy">Medium Heavy</option>
-                  <option value="Heavy">Heavy</option>
-                </select>
+                <label for="complexity-slider">Game Complexity:</label>
+                <div class="complexity-slider-container">
+                  <input type="range" min="1" max="5" value="3" class="complexity-slider" id="complexity-slider">
+                  <div class="complexity-labels">
+                    <span>Light</span>
+                    <span>Medium</span>
+                    <span>Heavy</span>
+                  </div>
+                </div>
+                <div class="complexity-value" id="complexity-value">Medium</div>
               </div>
               
               <!-- Sort by options -->
@@ -64,6 +65,67 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
       </div>
     `;
+    
+    // Add CSS for the new complexity slider
+    const sliderCSS = `
+      <style>
+        .complexity-slider-container {
+          width: 100%;
+          margin: 10px 0;
+        }
+        
+        .complexity-slider {
+          width: 100%;
+          height: 8px;
+          -webkit-appearance: none;
+          appearance: none;
+          background: #f1f1f1;
+          outline: none;
+          border-radius: 4px;
+        }
+        
+        .complexity-slider::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          appearance: none;
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          background: var(--main);
+          cursor: pointer;
+        }
+        
+        .complexity-slider::-moz-range-thumb {
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          background: var(--main);
+          cursor: pointer;
+          border: none;
+        }
+        
+        .complexity-labels {
+          display: flex;
+          justify-content: space-between;
+          margin-top: 5px;
+          font-size: 12px;
+          color: var(--dark);
+        }
+        
+        .complexity-value {
+          text-align: center;
+          margin-top: 5px;
+          font-weight: bold;
+          color: var(--main);
+        }
+        
+        .welcome-form-group {
+          margin-bottom: 20px;
+        }
+      </style>
+    `;
+    
+    // Add the CSS to the page
+    document.head.insertAdjacentHTML('beforeend', sliderCSS);
     
     // Add the HTML to the page
     document.body.insertAdjacentHTML('beforeend', welcomePopupHTML);
@@ -87,8 +149,28 @@ function initWelcomePopup() {
   
   // User selections
   const playerCount = document.getElementById('player-count');
-  const complexitySelect = document.getElementById('complexity-select');
+  const complexitySlider = document.getElementById('complexity-slider');
+  const complexityValue = document.getElementById('complexity-value');
   const sortByWelcome = document.getElementById('sort-by-welcome');
+  
+  // Initialize complexity slider value display
+  updateComplexityValue(complexitySlider.value);
+  
+  // Update complexity text when slider moves
+  complexitySlider.addEventListener('input', function() {
+    updateComplexityValue(this.value);
+  });
+  
+  function updateComplexityValue(value) {
+    const complexityLabels = {
+      '1': 'Light',
+      '2': 'Light Medium',
+      '3': 'Medium',
+      '4': 'Medium Heavy',
+      '5': 'Heavy'
+    };
+    complexityValue.textContent = complexityLabels[value];
+  }
   
   // Close functionality
   function closeWelcomePopup() {
@@ -96,68 +178,88 @@ function initWelcomePopup() {
     document.body.style.overflow = 'auto';
   }
   
-  // Function to inspect player filters to better understand the format
-  function inspectPlayerFilters() {
-    console.log("Inspecting player filters...");
-    const playerFilters = document.querySelectorAll('#facet-players .ais-HierarchicalMenu-item');
+  // Function to capture all available filter options from the actual UI
+  function captureAvailableFilters() {
+    // Create a data structure to store all available filter options
+    const availableFilters = {
+      players: [],
+      complexity: []
+    };
     
-    playerFilters.forEach(filter => {
+    // Get actual player count options from the DOM
+    const playerFilters = document.querySelectorAll('#facet-players .ais-HierarchicalMenu-item');
+    console.log(`Found ${playerFilters.length} player filter options`);
+    
+    playerFilters.forEach((filter, index) => {
       const label = filter.querySelector('.ais-HierarchicalMenu-label');
-      const text = label ? label.textContent.trim() : 'No label found';
-      console.log(`Player filter: ${text}`);
-    });
-  }
-  
-  // Function to find and click specific player count filter by examining all available options
-  function clickPlayerCountFilter(playerCount) {
-    // Wait for facets to load
-    setTimeout(() => {
-      // First, inspect available player filters
-      inspectPlayerFilters();
-      
-      // Try to find exact match for the player count
-      const playerFilters = document.querySelectorAll('#facet-players .ais-HierarchicalMenu-item');
-      
-      let found = false;
-      playerFilters.forEach(filter => {
-        const label = filter.querySelector('.ais-HierarchicalMenu-label');
-        if (!label) return;
-        
+      if (label) {
         const text = label.textContent.trim();
+        console.log(`Player option ${index}: "${text}"`);
         
-        // Check if the player count matches the exact number
-        if (text === playerCount || text === `${playerCount}`) {
-          console.log(`Found exact match for player count ${playerCount}: "${text}"`);
-          label.click();
-          found = true;
-          return;
-        }
-      });
-      
-      if (!found) {
-        console.log(`No exact match found for player count ${playerCount}, looking for closest match...`);
-        
-        // If no exact match, try to find first level menu items
-        playerFilters.forEach(filter => {
-          const label = filter.querySelector('.ais-HierarchicalMenu-label');
-          if (!label) return;
-          
-          const text = label.textContent.trim();
-          
-          // Try to match just the number without additional text
-          if (text.startsWith(playerCount) || text === playerCount) {
-            console.log(`Found closest match for player count ${playerCount}: "${text}"`);
-            label.click();
-            found = true;
-            return;
-          }
+        // Store both the text and the DOM element for direct access later
+        availableFilters.players.push({
+          text: text,
+          element: label
         });
       }
-      
-      if (!found) {
-        console.log(`Could not find any match for player count ${playerCount}`);
+    });
+    
+    // Get actual complexity options from the DOM
+    const complexityFilters = document.querySelectorAll('#facet-weight .ais-RefinementList-item');
+    console.log(`Found ${complexityFilters.length} complexity filter options`);
+    
+    complexityFilters.forEach((filter, index) => {
+      const label = filter.querySelector('.ais-RefinementList-label');
+      if (label) {
+        const text = label.textContent.trim();
+        console.log(`Complexity option ${index}: "${text}"`);
+        
+        // Store both the text and the DOM element for direct access later
+        availableFilters.complexity.push({
+          text: text,
+          element: label
+        });
       }
-    }, 800); // Increase timeout to ensure UI is fully loaded
+    });
+    
+    console.log("All available filters captured:", availableFilters);
+    return availableFilters;
+  }
+  
+  // Function to find the best matching filter for a given value
+  function findBestMatch(options, value) {
+    // First try for exact match
+    const exactMatch = options.find(option => option.text === value);
+    if (exactMatch) {
+      console.log(`Found exact match: "${exactMatch.text}"`);
+      return exactMatch;
+    }
+    
+    // Try for starts with match
+    const startsWithMatch = options.find(option => option.text.startsWith(value));
+    if (startsWithMatch) {
+      console.log(`Found starts-with match: "${startsWithMatch.text}" for "${value}"`);
+      return startsWithMatch;
+    }
+    
+    // Try for contains match
+    const containsMatch = options.find(option => option.text.includes(value));
+    if (containsMatch) {
+      console.log(`Found contains match: "${containsMatch.text}" for "${value}"`);
+      return containsMatch;
+    }
+    
+    // Try for case-insensitive match
+    const caseInsensitiveMatch = options.find(option => 
+      option.text.toLowerCase() === value.toLowerCase()
+    );
+    if (caseInsensitiveMatch) {
+      console.log(`Found case-insensitive match: "${caseInsensitiveMatch.text}" for "${value}"`);
+      return caseInsensitiveMatch;
+    }
+    
+    console.log(`No match found for "${value}"`);
+    return null;
   }
   
   // Apply selected sort option
@@ -185,96 +287,59 @@ function initWelcomePopup() {
     }
   }
   
-  // Debug function to directly manipulate checkboxes
-  function clickComplexityCheckbox(complexityText) {
-    if (!complexityText) return false;
+  // Function to apply preferences using the captured filters
+  function applyPreferencesWithMapping() {
+    // Get user selections
+    const playerValue = playerCount.value;
+    const complexityValue = complexityValue.textContent;
+    const sortValue = sortByWelcome.value;
     
-    console.log(`Looking for complexity checkbox for: "${complexityText}"`);
+    console.log("User selections:", {
+      player: playerValue,
+      complexity: complexityValue,
+      sort: sortValue
+    });
     
-    // Wait for facets to load
+    // Capture all available filter options from the actual UI
     setTimeout(() => {
-      // First, check if we can find the weight facet
-      const weightFacet = document.getElementById('facet-weight');
-      if (!weightFacet) {
-        console.log("ERROR: facet-weight element not found!");
-        return false;
-      }
+      const availableFilters = captureAvailableFilters();
       
-      // Find all labels in the weight facet
-      const labels = weightFacet.querySelectorAll('.ais-RefinementList-label');
-      console.log(`Found ${labels.length} complexity options`);
-      
-      // Log all available options
-      labels.forEach((label, index) => {
-        console.log(`Option ${index}: "${label.textContent.trim()}"`);
-      });
-      
-      // Try to find and click the matching label
-      let found = false;
-      
-      labels.forEach(label => {
-        if (found) return;
+      // Apply player count filter if selected
+      if (playerValue) {
+        console.log(`Trying to apply player filter: ${playerValue}`);
         
-        const text = label.textContent.trim();
-        if (text === complexityText) {
-          console.log(`Found exact match for complexity: "${text}"`);
-          
-          // Try direct click
-          label.click();
-          
-          // Also try to find and check the checkbox
-          const checkbox = label.querySelector('input[type="checkbox"]');
-          if (checkbox) {
-            checkbox.checked = true;
-            const event = new Event('change', { bubbles: true });
-            checkbox.dispatchEvent(event);
-            console.log("Clicked checkbox directly");
-          }
-          
-          found = true;
-        }
-      });
-      
-      if (!found) {
-        // If no exact match, try case-insensitive match
-        labels.forEach(label => {
-          if (found) return;
-          
-          const text = label.textContent.trim();
-          if (text.toLowerCase() === complexityText.toLowerCase()) {
-            console.log(`Found case-insensitive match for complexity: "${text}"`);
-            label.click();
-            found = true;
-          }
-        });
-      }
-      
-      if (!found) {
-        console.log(`No match found for complexity: "${complexityText}"`);
+        // Find best match from available options
+        const playerMatch = findBestMatch(availableFilters.players, playerValue);
         
-        // Last resort: Try to get all checkboxes
-        const checkboxes = weightFacet.querySelectorAll('input[type="checkbox"]');
-        console.log(`Found ${checkboxes.length} checkboxes`);
-        
-        // Map of expected values to checkbox indices
-        const complexityIndices = {
-          'Light': 0,
-          'Light Medium': 1,
-          'Medium': 2,
-          'Medium Heavy': 3,
-          'Heavy': 4
-        };
-        
-        const index = complexityIndices[complexityText];
-        if (index !== undefined && index < checkboxes.length) {
-          const checkbox = checkboxes[index];
-          checkbox.checked = true;
-          const event = new Event('change', { bubbles: true });
-          checkbox.dispatchEvent(event);
-          console.log(`Clicked checkbox at index ${index}`);
+        if (playerMatch) {
+          console.log(`Clicking player option: "${playerMatch.text}"`);
+          playerMatch.element.click();
+        } else {
+          console.log(`No match found for player count: ${playerValue}`);
         }
       }
-    }, 1000);
+      
+      // Apply complexity filter if selected
+      if (complexityValue) {
+        console.log(`Trying to apply complexity filter: ${complexityValue}`);
+        
+        // Find best match from available options
+        const complexityMatch = findBestMatch(availableFilters.complexity, complexityValue);
+        
+        if (complexityMatch) {
+          console.log(`Clicking complexity option: "${complexityMatch.text}"`);
+          complexityMatch.element.click();
+        } else {
+          console.log(`No match found for complexity: ${complexityValue}`);
+        }
+      }
+      
+      // Apply sort option
+      if (sortValue) {
+        console.log(`Applying sort option: ${sortValue}`);
+        applySortOption(sortValue);
+      }
+    }, 1000); // Allow time for facets to load
   }
   
   // Apply filters function
@@ -285,24 +350,7 @@ function initWelcomePopup() {
     // Short delay to ensure facets are loaded
     setTimeout(() => {
       console.log("Applying preferences...");
-      
-      // Apply player count filter if selected
-      if (playerCount.value) {
-        console.log(`Applying player filter: ${playerCount.value}`);
-        clickPlayerCountFilter(playerCount.value);
-      }
-      
-      // Apply complexity filter if selected
-      if (complexitySelect.value) {
-        console.log(`Applying complexity filter: ${complexitySelect.value}`);
-        clickComplexityCheckbox(complexitySelect.value);
-      }
-      
-      // Apply sort option
-      if (sortByWelcome.value) {
-        console.log(`Applying sort option: ${sortByWelcome.value}`);
-        applySortOption(sortByWelcome.value);
-      }
+      applyPreferencesWithMapping();
     }, 800);
   }
   
