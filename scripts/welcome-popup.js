@@ -178,31 +178,6 @@ function initWelcomePopup() {
     document.body.style.overflow = 'auto';
   }
   
-  // Function to directly select a dropdown option
-  function selectDropdownOption(selector, optionText) {
-    const dropdown = document.querySelector(selector);
-    if (!dropdown) {
-      console.log(`Dropdown not found: ${selector}`);
-      return false;
-    }
-    
-    for (let i = 0; i < dropdown.options.length; i++) {
-      if (dropdown.options[i].text.includes(optionText)) {
-        dropdown.selectedIndex = i;
-        
-        // Trigger change event
-        const event = new Event('change', { bubbles: true });
-        dropdown.dispatchEvent(event);
-        
-        console.log(`Selected option: ${optionText} in dropdown ${selector}`);
-        return true;
-      }
-    }
-    
-    console.log(`Option with text ${optionText} not found in dropdown ${selector}`);
-    return false;
-  }
-  
   // Function to inspect player filters to better understand the format
   function inspectPlayerFilters() {
     console.log("Inspecting player filters...");
@@ -233,7 +208,6 @@ function initWelcomePopup() {
         const text = label.textContent.trim();
         
         // Check if the player count matches the exact number
-        // Note: This matching logic may need to be adjusted based on the actual format of your player filters
         if (text === playerCount || text === `${playerCount}`) {
           console.log(`Found exact match for player count ${playerCount}: "${text}"`);
           label.click();
@@ -293,36 +267,158 @@ function initWelcomePopup() {
     }
   }
   
-  // Function to click on complexity filter
-  function clickComplexityFilter(complexityText) {
+  // Function to inspect complexity filters
+  function inspectComplexityFilters() {
+    console.log("Inspecting complexity filters...");
+    const complexityItems = document.querySelectorAll('#facet-weight .ais-RefinementList-item');
+    
+    if (complexityItems.length === 0) {
+      console.log("No complexity filters found! The selector might be incorrect.");
+    }
+    
+    complexityItems.forEach((item, index) => {
+      const label = item.querySelector('.ais-RefinementList-label');
+      const text = label ? label.textContent.trim() : 'No label found';
+      console.log(`Complexity filter ${index}: "${text}"`);
+      
+      // Also log the HTML structure to see what's inside
+      console.log("Element HTML:", item.outerHTML);
+    });
+    
+    // Also check if the facet-weight element exists
+    const facetWeight = document.getElementById('facet-weight');
+    if (facetWeight) {
+      console.log("facet-weight element found");
+      console.log("facet-weight HTML:", facetWeight.outerHTML);
+    } else {
+      console.log("facet-weight element NOT found!");
+    }
+  }
+  
+  // Function to force-click complexity filter by simulating a mousedown and mouseup event
+  function forceClickElement(element) {
+    if (!element) {
+      console.log("Cannot force-click null element");
+      return false;
+    }
+    
+    try {
+      // Create and dispatch mousedown event
+      const mouseDown = new MouseEvent('mousedown', {
+        bubbles: true,
+        cancelable: true,
+        view: window
+      });
+      element.dispatchEvent(mouseDown);
+      
+      // Create and dispatch mouseup event
+      const mouseUp = new MouseEvent('mouseup', {
+        bubbles: true,
+        cancelable: true,
+        view: window
+      });
+      element.dispatchEvent(mouseUp);
+      
+      // Create and dispatch click event
+      const click = new MouseEvent('click', {
+        bubbles: true,
+        cancelable: true,
+        view: window
+      });
+      element.dispatchEvent(click);
+      
+      console.log("Force-clicked element:", element);
+      return true;
+    } catch (error) {
+      console.error("Error force-clicking element:", error);
+      return false;
+    }
+  }
+  
+  // Function to apply complexity filter with multiple methods
+  function applyComplexityFilter(complexityText) {
     // Wait for facets to load
     setTimeout(() => {
-      console.log(`Looking for complexity filter: ${complexityText}`);
+      console.log(`Attempting to apply complexity filter: ${complexityText}`);
       
-      // First, log all available complexity options
+      // First, inspect all available complexity options for debugging
+      inspectComplexityFilters();
+      
+      // Try several methods to click the complexity filter
+      
+      // Method 1: Direct querySelector with more specific selector
+      const specificSelector = `#facet-weight .ais-RefinementList-label[title="${complexityText}"], #facet-weight .ais-RefinementList-labelText[title="${complexityText}"]`;
+      const specificElement = document.querySelector(specificSelector);
+      
+      if (specificElement) {
+        console.log(`Method 1: Found complexity filter with specific selector: "${complexityText}"`);
+        forceClickElement(specificElement);
+        return;
+      }
+      
+      // Method 2: Find by text content
       const complexityItems = document.querySelectorAll('#facet-weight .ais-RefinementList-item');
+      let found = false;
+      
       complexityItems.forEach(item => {
+        if (found) return; // Skip if already found
+        
         const label = item.querySelector('.ais-RefinementList-label');
-        if (label) {
-          console.log(`Available complexity: "${label.textContent.trim()}"`);
+        if (!label) return;
+        
+        const text = label.textContent.trim();
+        if (text === complexityText) {
+          console.log(`Method 2: Found exact match for complexity: "${complexityText}"`);
+          forceClickElement(label);
+          found = true;
+          return;
         }
       });
       
-      // Find and click the exact match
-      let found = false;
-      complexityItems.forEach(item => {
-        const label = item.querySelector('.ais-RefinementList-label');
-        if (label && label.textContent.trim() === complexityText) {
-          console.log(`Found exact match for complexity: "${complexityText}"`);
-          label.click();
-          found = true;
-        }
-      });
+      // Method 3: Try clicking the actual checkbox
+      if (!found) {
+        complexityItems.forEach(item => {
+          if (found) return; // Skip if already found
+          
+          const label = item.querySelector('.ais-RefinementList-label');
+          const checkbox = item.querySelector('.ais-RefinementList-checkbox');
+          
+          if (!label || !checkbox) return;
+          
+          const text = label.textContent.trim();
+          if (text === complexityText) {
+            console.log(`Method 3: Found checkbox for complexity: "${complexityText}"`);
+            checkbox.checked = true;
+            const event = new Event('change', { bubbles: true });
+            checkbox.dispatchEvent(event);
+            found = true;
+            return;
+          }
+        });
+      }
+      
+      // Method 4: Try finding a partial match
+      if (!found) {
+        complexityItems.forEach(item => {
+          if (found) return; // Skip if already found
+          
+          const label = item.querySelector('.ais-RefinementList-label');
+          if (!label) return;
+          
+          const text = label.textContent.trim();
+          if (text.includes(complexityText)) {
+            console.log(`Method 4: Found partial match for complexity: "${text}" contains "${complexityText}"`);
+            forceClickElement(label);
+            found = true;
+            return;
+          }
+        });
+      }
       
       if (!found) {
-        console.log(`No exact match found for complexity: "${complexityText}"`);
+        console.log(`Could not find any matches for complexity: "${complexityText}"`);
       }
-    }, 800);
+    }, 1000); // Wait a full second to ensure UI is loaded
   }
   
   // Apply filters function
@@ -353,7 +449,7 @@ function initWelcomePopup() {
       const complexityText = complexityLabels[complexityValue];
       
       console.log(`Applying complexity filter: ${complexityText}`);
-      clickComplexityFilter(complexityText);
+      applyComplexityFilter(complexityText);
       
       // Apply sort option
       if (sortByWelcome.value) {
