@@ -147,6 +147,15 @@ details > summary:first-of-type {
   height: 30px;
 }
 
+.game-counter {
+    color: white;
+    margin-left: 20px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+}
+
 /* Filter Facets */
 .facets {
     display: flex;
