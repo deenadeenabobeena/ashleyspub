@@ -26,6 +26,16 @@ function on_render() {
     hit.setAttribute("style", "background: rgba(" + color + ", 0.5)");
   })
 
+// Added
+search.on('render', function() {
+    // Update game counter
+    const gameCount = search.helper.lastResults?.nbHits || 0;
+    const counterElement = document.getElementById('game-counter');
+    if (counterElement) {
+        counterElement.textContent = `${gameCount} Games`;
+    }
+});
+  
   if ("ontouchstart" in window) {
     function close_all_panels(facets) {
       facets.querySelectorAll(".facet .ais-Panel-body").forEach(function(panel_body) {
