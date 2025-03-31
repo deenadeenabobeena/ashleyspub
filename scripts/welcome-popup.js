@@ -43,12 +43,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     <span>Heavy</span>
                   </div>
                 </div>
-                <div class="complexity-value" id="complexity-value">Medium</div>
+                <div class="complexity-display" id="complexity-display">Medium</div>
               </div>
               
               <!-- Sort by options -->
               <div class="welcome-form-group">
-                <label for="sort-by">Sort Games By:</label>
+                <label for="sort-by-welcome">Sort Games By:</label>
                 <select id="sort-by-welcome">
                   <option value="name">Name</option>
                   <option value="rank">BGG Rank</option>
@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', function() {
           color: var(--dark);
         }
         
-        .complexity-value {
+        .complexity-display {
           text-align: center;
           margin-top: 5px;
           font-weight: bold;
@@ -148,28 +148,30 @@ function initWelcomePopup() {
   const applyPreferencesButton = document.getElementById('apply-preferences');
   
   // User selections
-  const playerCount = document.getElementById('player-count');
+  const playerCountSelect = document.getElementById('player-count');
   const complexitySlider = document.getElementById('complexity-slider');
-  const complexityValue = document.getElementById('complexity-value');
-  const sortByWelcome = document.getElementById('sort-by-welcome');
+  const complexityDisplay = document.getElementById('complexity-display');
+  const sortBySelect = document.getElementById('sort-by-welcome');
+  
+  // Complexity mapping
+  const COMPLEXITY_LABELS = {
+    '1': 'Light',
+    '2': 'Light Medium',
+    '3': 'Medium',
+    '4': 'Medium Heavy',
+    '5': 'Heavy'
+  };
   
   // Initialize complexity slider value display
-  updateComplexityValue(complexitySlider.value);
+  updateComplexityDisplay(complexitySlider.value);
   
   // Update complexity text when slider moves
   complexitySlider.addEventListener('input', function() {
-    updateComplexityValue(this.value);
+    updateComplexityDisplay(this.value);
   });
   
-  function updateComplexityValue(value) {
-    const complexityLabels = {
-      '1': 'Light',
-      '2': 'Light Medium',
-      '3': 'Medium',
-      '4': 'Medium Heavy',
-      '5': 'Heavy'
-    };
-    complexityValue.textContent = complexityLabels[value];
+  function updateComplexityDisplay(value) {
+    complexityDisplay.textContent = COMPLEXITY_LABELS[value];
   }
   
   // Close functionality
@@ -178,88 +180,52 @@ function initWelcomePopup() {
     document.body.style.overflow = 'auto';
   }
   
-  // Function to capture all available filter options from the actual UI
-  function captureAvailableFilters() {
-    // Create a data structure to store all available filter options
-    const availableFilters = {
-      players: [],
-      complexity: []
-    };
+  // Function to directly click on a filter option in the facets
+  function clickFilterOption(selector, optionText) {
+    console.log(`Looking for filter option: "${optionText}" in ${selector}`);
     
-    // Get actual player count options from the DOM
-    const playerFilters = document.querySelectorAll('#facet-players .ais-HierarchicalMenu-item');
-    console.log(`Found ${playerFilters.length} player filter options`);
-    
-    playerFilters.forEach((filter, index) => {
-      const label = filter.querySelector('.ais-HierarchicalMenu-label');
-      if (label) {
+    // Wait a bit for facets to load
+    setTimeout(() => {
+      // Get all labels within the specified selector
+      const labels = document.querySelectorAll(`${selector} .ais-RefinementList-label, ${selector} .ais-HierarchicalMenu-label`);
+      console.log(`Found ${labels.length} potential options`);
+      
+      // Try to find and click the matching label
+      let found = false;
+      
+      // First try for exact match
+      for (let i = 0; i < labels.length; i++) {
+        const label = labels[i];
         const text = label.textContent.trim();
-        console.log(`Player option ${index}: "${text}"`);
+        console.log(`Option ${i}: "${text}"`);
         
-        // Store both the text and the DOM element for direct access later
-        availableFilters.players.push({
-          text: text,
-          element: label
-        });
+        if (text === optionText) {
+          console.log(`Found exact match: "${text}"`);
+          label.click();
+          found = true;
+          break;
+        }
       }
-    });
-    
-    // Get actual complexity options from the DOM
-    const complexityFilters = document.querySelectorAll('#facet-weight .ais-RefinementList-item');
-    console.log(`Found ${complexityFilters.length} complexity filter options`);
-    
-    complexityFilters.forEach((filter, index) => {
-      const label = filter.querySelector('.ais-RefinementList-label');
-      if (label) {
-        const text = label.textContent.trim();
-        console.log(`Complexity option ${index}: "${text}"`);
-        
-        // Store both the text and the DOM element for direct access later
-        availableFilters.complexity.push({
-          text: text,
-          element: label
-        });
+      
+      // If no exact match, try for starts with match
+      if (!found) {
+        for (let i = 0; i < labels.length; i++) {
+          const label = labels[i];
+          const text = label.textContent.trim();
+          
+          if (text.startsWith(optionText) || optionText.startsWith(text)) {
+            console.log(`Found partial match: "${text}" for "${optionText}"`);
+            label.click();
+            found = true;
+            break;
+          }
+        }
       }
-    });
-    
-    console.log("All available filters captured:", availableFilters);
-    return availableFilters;
-  }
-  
-  // Function to find the best matching filter for a given value
-  function findBestMatch(options, value) {
-    // First try for exact match
-    const exactMatch = options.find(option => option.text === value);
-    if (exactMatch) {
-      console.log(`Found exact match: "${exactMatch.text}"`);
-      return exactMatch;
-    }
-    
-    // Try for starts with match
-    const startsWithMatch = options.find(option => option.text.startsWith(value));
-    if (startsWithMatch) {
-      console.log(`Found starts-with match: "${startsWithMatch.text}" for "${value}"`);
-      return startsWithMatch;
-    }
-    
-    // Try for contains match
-    const containsMatch = options.find(option => option.text.includes(value));
-    if (containsMatch) {
-      console.log(`Found contains match: "${containsMatch.text}" for "${value}"`);
-      return containsMatch;
-    }
-    
-    // Try for case-insensitive match
-    const caseInsensitiveMatch = options.find(option => 
-      option.text.toLowerCase() === value.toLowerCase()
-    );
-    if (caseInsensitiveMatch) {
-      console.log(`Found case-insensitive match: "${caseInsensitiveMatch.text}" for "${value}"`);
-      return caseInsensitiveMatch;
-    }
-    
-    console.log(`No match found for "${value}"`);
-    return null;
+      
+      if (!found) {
+        console.log(`No match found for "${optionText}"`);
+      }
+    }, 1000);
   }
   
   // Apply selected sort option
@@ -287,12 +253,16 @@ function initWelcomePopup() {
     }
   }
   
-  // Function to apply preferences using the captured filters
-  function applyPreferencesWithMapping() {
-    // Get user selections
-    const playerValue = playerCount.value;
-    const complexityValue = complexityValue.textContent;
-    const sortValue = sortByWelcome.value;
+  // Apply filters function
+  function applyPreferences() {
+    // Close the popup first
+    closeWelcomePopup();
+    
+    // Get the selected values
+    const playerValue = playerCountSelect.value;
+    const sliderValue = complexitySlider.value;
+    const complexityValue = COMPLEXITY_LABELS[sliderValue];
+    const sortValue = sortBySelect.value;
     
     console.log("User selections:", {
       player: playerValue,
@@ -300,57 +270,22 @@ function initWelcomePopup() {
       sort: sortValue
     });
     
-    // Capture all available filter options from the actual UI
+    // Apply the filters with a delay to ensure UI is loaded
     setTimeout(() => {
-      const availableFilters = captureAvailableFilters();
-      
       // Apply player count filter if selected
       if (playerValue) {
-        console.log(`Trying to apply player filter: ${playerValue}`);
-        
-        // Find best match from available options
-        const playerMatch = findBestMatch(availableFilters.players, playerValue);
-        
-        if (playerMatch) {
-          console.log(`Clicking player option: "${playerMatch.text}"`);
-          playerMatch.element.click();
-        } else {
-          console.log(`No match found for player count: ${playerValue}`);
-        }
+        clickFilterOption('#facet-players', playerValue);
       }
       
       // Apply complexity filter if selected
       if (complexityValue) {
-        console.log(`Trying to apply complexity filter: ${complexityValue}`);
-        
-        // Find best match from available options
-        const complexityMatch = findBestMatch(availableFilters.complexity, complexityValue);
-        
-        if (complexityMatch) {
-          console.log(`Clicking complexity option: "${complexityMatch.text}"`);
-          complexityMatch.element.click();
-        } else {
-          console.log(`No match found for complexity: ${complexityValue}`);
-        }
+        clickFilterOption('#facet-weight', complexityValue);
       }
       
       // Apply sort option
       if (sortValue) {
-        console.log(`Applying sort option: ${sortValue}`);
         applySortOption(sortValue);
       }
-    }, 1000); // Allow time for facets to load
-  }
-  
-  // Apply filters function
-  function applyPreferences() {
-    // Close the popup first
-    closeWelcomePopup();
-    
-    // Short delay to ensure facets are loaded
-    setTimeout(() => {
-      console.log("Applying preferences...");
-      applyPreferencesWithMapping();
     }, 800);
   }
   
