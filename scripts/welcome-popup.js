@@ -10,12 +10,13 @@ document.addEventListener('DOMContentLoaded', function() {
         <div class="welcome-content">
           <div class="close">×</div>
           
-          <!-- Step 1: Welcome and player count -->
-          <div id="welcome-step-1" class="welcome-step">
+          <!-- Single-screen welcome with simplified options -->
+          <div id="welcome-screen" class="welcome-step">
             <h2>Welcome to Boardom's End!</h2>
-            <p>Let's find the perfect game for your group. First, tell us how many players you have.</p>
+            <p>Let's find the perfect game for your group. Set your preferences below.</p>
             
             <div class="welcome-form">
+              <!-- Player count selection -->
               <div class="welcome-form-group">
                 <label for="player-count">Number of Players:</label>
                 <select id="player-count">
@@ -30,88 +31,101 @@ document.addEventListener('DOMContentLoaded', function() {
                   <option value="8">8+ players</option>
                 </select>
               </div>
-            </div>
-            
-            <div class="progress-dots">
-              <div class="dot active"></div>
-              <div class="dot"></div>
-              <div class="dot"></div>
-            </div>
-            
-            <div class="welcome-buttons">
-              <button id="next-step-1" class="welcome-button">Next</button>
-            </div>
-          </div>
-          
-          <!-- Step 2: Game category preferences -->
-          <div id="welcome-step-2" class="welcome-step" style="display: none;">
-            <h2>What type of games do you enjoy?</h2>
-            <p>Select a category that interests your group.</p>
-            
-            <div class="welcome-form">
+              
+              <!-- Complexity selection -->
               <div class="welcome-form-group">
-                <label for="game-category">Game Category:</label>
-                <select id="game-category">
-                  <option value="">Any category</option>
-                  <option value="Strategy">Strategy</option>
-                  <option value="Party Game">Party Game</option>
-                  <option value="Card Game">Card Game</option>
-                  <option value="Cooperative">Cooperative</option>
-                  <option value="Family">Family</option>
-                  <option value="Dice">Dice</option>
-                  <option value="Fantasy">Fantasy</option>
-                  <option value="Economic">Economic</option>
-                  <option value="Wargame">Wargame</option>
+                <label for="complexity">Game Complexity:</label>
+                <div class="complexity-slider-container">
+                  <input type="range" min="1" max="5" value="3" class="complexity-slider" id="complexity-slider">
+                  <div class="complexity-labels">
+                    <span>Light</span>
+                    <span>Medium</span>
+                    <span>Heavy</span>
+                  </div>
+                </div>
+                <div class="complexity-value" id="complexity-value">Medium</div>
+              </div>
+              
+              <!-- Sort by options -->
+              <div class="welcome-form-group">
+                <label for="sort-by">Sort Games By:</label>
+                <select id="sort-by-welcome">
+                  <option value="name">Name</option>
+                  <option value="rank">BGG Rank</option>
+                  <option value="rating">Number of Ratings</option>
+                  <option value="owned">Number of Owners</option>
                 </select>
               </div>
             </div>
             
-            <div class="progress-dots">
-              <div class="dot"></div>
-              <div class="dot active"></div>
-              <div class="dot"></div>
-            </div>
-            
             <div class="welcome-buttons">
-              <button id="prev-step-2" class="welcome-button secondary">Back</button>
-              <button id="next-step-2" class="welcome-button">Next</button>
-            </div>
-          </div>
-          
-          <!-- Step 3: Playing time -->
-          <div id="welcome-step-3" class="welcome-step" style="display: none;">
-            <h2>How much time do you have?</h2>
-            <p>Select how long you'd like to play.</p>
-            
-            <div class="welcome-form">
-              <div class="welcome-form-group">
-                <label for="playing-time">Playing Time:</label>
-                <select id="playing-time">
-                  <option value="">Any length</option>
-                  <option value="< 30min">Less than 30 minutes</option>
-                  <option value="30min - 1h">30 minutes to 1 hour</option>
-                  <option value="1-2h">1-2 hours</option>
-                  <option value="2-3h">2-3 hours</option>
-                  <option value="3-4h">3-4 hours</option>
-                  <option value="> 4h">More than 4 hours</option>
-                </select>
-              </div>
-            </div>
-            
-            <div class="progress-dots">
-              <div class="dot"></div>
-              <div class="dot"></div>
-              <div class="dot active"></div>
-            </div>
-            
-            <div class="welcome-buttons">
-              <button id="prev-step-3" class="welcome-button secondary">Back</button>
-              <button id="apply-filters" class="welcome-button">Find Games</button>
+              <button id="apply-preferences" class="welcome-button">Find Games</button>
             </div>
           </div>
         </div>
       </div>
     `;
+    
+    // Add CSS for the new complexity slider
+    const sliderCSS = `
+      <style>
+        .complexity-slider-container {
+          width: 100%;
+          margin: 10px 0;
+        }
+        
+        .complexity-slider {
+          width: 100%;
+          height: 8px;
+          -webkit-appearance: none;
+          appearance: none;
+          background: #f1f1f1;
+          outline: none;
+          border-radius: 4px;
+        }
+        
+        .complexity-slider::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          appearance: none;
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          background: var(--main);
+          cursor: pointer;
+        }
+        
+        .complexity-slider::-moz-range-thumb {
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          background: var(--main);
+          cursor: pointer;
+          border: none;
+        }
+        
+        .complexity-labels {
+          display: flex;
+          justify-content: space-between;
+          margin-top: 5px;
+          font-size: 12px;
+          color: var(--dark);
+        }
+        
+        .complexity-value {
+          text-align: center;
+          margin-top: 5px;
+          font-weight: bold;
+          color: var(--main);
+        }
+        
+        .welcome-form-group {
+          margin-bottom: 20px;
+        }
+      </style>
+    `;
+    
+    // Add the CSS to the page
+    document.head.insertAdjacentHTML('beforeend', sliderCSS);
     
     // Add the HTML to the page
     document.body.insertAdjacentHTML('beforeend', welcomePopupHTML);
@@ -131,45 +145,37 @@ function initWelcomePopup() {
   
   // Elements
   const closeButton = welcomePopup.querySelector('.close');
-  const nextStep1Button = document.getElementById('next-step-1');
-  const nextStep2Button = document.getElementById('next-step-2');
-  const prevStep2Button = document.getElementById('prev-step-2');
-  const prevStep3Button = document.getElementById('prev-step-3');
-  const applyFiltersButton = document.getElementById('apply-filters');
-  
-  const step1 = document.getElementById('welcome-step-1');
-  const step2 = document.getElementById('welcome-step-2');
-  const step3 = document.getElementById('welcome-step-3');
+  const applyPreferencesButton = document.getElementById('apply-preferences');
   
   // User selections
   const playerCount = document.getElementById('player-count');
-  const gameCategory = document.getElementById('game-category');
-  const playingTime = document.getElementById('playing-time');
+  const complexitySlider = document.getElementById('complexity-slider');
+  const complexityValue = document.getElementById('complexity-value');
+  const sortByWelcome = document.getElementById('sort-by-welcome');
+  
+  // Initialize complexity slider value display
+  updateComplexityValue(complexitySlider.value);
+  
+  // Update complexity text when slider moves
+  complexitySlider.addEventListener('input', function() {
+    updateComplexityValue(this.value);
+  });
+  
+  function updateComplexityValue(value) {
+    const complexityLabels = {
+      '1': 'Light',
+      '2': 'Light Medium',
+      '3': 'Medium',
+      '4': 'Medium Heavy',
+      '5': 'Heavy'
+    };
+    complexityValue.textContent = complexityLabels[value];
+  }
   
   // Close functionality
   function closeWelcomePopup() {
     welcomePopup.style.display = 'none';
     document.body.style.overflow = 'auto';
-  }
-  
-  // Navigation between steps
-  function goToStep(step) {
-    // Hide all steps
-    step1.style.display = 'none';
-    step2.style.display = 'none';
-    step3.style.display = 'none';
-    
-    // Show the requested step
-    if (step === 1) step1.style.display = 'block';
-    if (step === 2) step2.style.display = 'block';
-    if (step === 3) step3.style.display = 'block';
-    
-    // Update progress dots
-    const dots = welcomePopup.querySelectorAll('.dot');
-    dots.forEach((dot, index) => {
-      dot.classList.remove('active');
-      if (index === step - 1) dot.classList.add('active');
-    });
   }
   
   // Function to simulate clicking on a facet label
@@ -199,14 +205,39 @@ function initWelcomePopup() {
     }, 500); // Wait 500ms to ensure UI is loaded
   }
   
+  // Apply selected sort option
+  function applySortOption(sortValue) {
+    const sortByElement = document.querySelector('#sort-by .ais-SortBy-select');
+    if (sortByElement) {
+      // Map welcome popup sort values to actual sort values
+      const sortMapping = {
+        'name': 0,      // Assuming "Name" is the first option
+        'rank': 1,      // Assuming "BGG Rank" is the second option
+        'rating': 2,    // Assuming "Number of ratings" is the third option
+        'owned': 3      // Assuming "Number of owners" is the fourth option
+      };
+      
+      const optionIndex = sortMapping[sortValue];
+      if (optionIndex !== undefined) {
+        sortByElement.selectedIndex = optionIndex;
+        
+        // Trigger change event to apply the sort
+        const event = new Event('change', { bubbles: true });
+        sortByElement.dispatchEvent(event);
+        
+        console.log(`Applied sort by: ${sortValue}`);
+      }
+    }
+  }
+  
   // Apply filters function
-  function applyFilters() {
+  function applyPreferences() {
     // Close the popup first
     closeWelcomePopup();
     
     // Short delay to ensure facets are loaded
     setTimeout(() => {
-      console.log("Applying filters...");
+      console.log("Applying preferences...");
       
       // Apply player count filter if selected
       if (playerCount.value) {
@@ -215,18 +246,24 @@ function initWelcomePopup() {
         clickFacetLabel('#facet-players .ais-HierarchicalMenu-label', playerCount.value);
       }
       
-      // Apply category filter if selected
-      if (gameCategory.value) {
-        console.log(`Applying category filter: ${gameCategory.value}`);
-        // Find and click the category filter
-        clickFacetLabel('#facet-categories .ais-RefinementList-label', gameCategory.value);
-      }
+      // Apply complexity filter based on slider value
+      const complexityValue = document.getElementById('complexity-slider').value;
+      const complexityLabels = {
+        '1': 'Light',
+        '2': 'Light Medium',
+        '3': 'Medium',
+        '4': 'Medium Heavy',
+        '5': 'Heavy'
+      };
+      const complexityText = complexityLabels[complexityValue];
       
-      // Apply playing time filter if selected
-      if (playingTime.value) {
-        console.log(`Applying time filter: ${playingTime.value}`);
-        // Find and click the playing time filter
-        clickFacetLabel('#facet-playing-time .ais-RefinementList-label', playingTime.value);
+      console.log(`Applying complexity filter: ${complexityText}`);
+      clickFacetLabel('#facet-weight .ais-RefinementList-label', complexityText);
+      
+      // Apply sort option
+      if (sortByWelcome.value) {
+        console.log(`Applying sort option: ${sortByWelcome.value}`);
+        applySortOption(sortByWelcome.value);
       }
     }, 500);
   }
@@ -236,24 +273,8 @@ function initWelcomePopup() {
     closeButton.addEventListener('click', closeWelcomePopup);
   }
   
-  if (nextStep1Button) {
-    nextStep1Button.addEventListener('click', () => goToStep(2));
-  }
-  
-  if (prevStep2Button) {
-    prevStep2Button.addEventListener('click', () => goToStep(1));
-  }
-  
-  if (nextStep2Button) {
-    nextStep2Button.addEventListener('click', () => goToStep(3));
-  }
-  
-  if (prevStep3Button) {
-    prevStep3Button.addEventListener('click', () => goToStep(2));
-  }
-  
-  if (applyFiltersButton) {
-    applyFiltersButton.addEventListener('click', applyFilters);
+  if (applyPreferencesButton) {
+    applyPreferencesButton.addEventListener('click', applyPreferences);
   }
   
   // Close on ESC key
