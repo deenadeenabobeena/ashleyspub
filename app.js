@@ -26,16 +26,6 @@ function on_render() {
     hit.setAttribute("style", "background: rgba(" + color + ", 0.5)");
   })
 
-// Added
-search.on('render', function() {
-    // Update game counter
-    const gameCount = search.helper.lastResults?.nbHits || 0;
-    const counterElement = document.getElementById('game-counter');
-    if (counterElement) {
-        counterElement.textContent = `${gameCount} Games`;
-    }
-});
-  
   if ("ontouchstart" in window) {
     function close_all_panels(facets) {
       facets.querySelectorAll(".facet .ais-Panel-body").forEach(function(panel_body) {
@@ -297,7 +287,17 @@ function get_widgets(SETTINGS) {
       maxPages: 20,
       showFirst: false,
       showLast: false
-    })
+    }),
+    // NEW WIDGET: Game Counter
+    "gameCounter": {
+      render({ instantSearchInstance }) {
+        const gameCount = instantSearchInstance.helper.lastResults?.nbHits || 0;
+        const counterElement = document.getElementById('game-counter');
+        if (counterElement) {
+          counterElement.textContent = `${gameCount} Games`;
+        }
+      }
+    }
   }
 }
 
@@ -352,6 +352,33 @@ function init(SETTINGS) {
   });
 
   search.on('render', on_render);
+  
+  // Create game counter element
+  if (!document.getElementById('game-counter')) {
+    const counterElement = document.createElement('div');
+    counterElement.id = 'game-counter';
+    counterElement.className = 'game-counter';
+    
+    // Add CSS for the game counter
+    const style = document.createElement('style');
+    style.textContent = `
+      .game-counter {
+        color: white;
+        margin-left: 20px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        white-space: nowrap;
+      }
+    `;
+    document.head.appendChild(style);
+    
+    // Insert after sort-by
+    const sortBy = document.getElementById('sort-by');
+    if (sortBy && sortBy.parentNode) {
+      sortBy.parentNode.insertBefore(counterElement, sortBy.nextSibling);
+    }
+  }
 
   var widgets = get_widgets(SETTINGS);
   search.addWidgets([
@@ -368,7 +395,8 @@ function init(SETTINGS) {
     widgets["stats"],
     widgets["pagination"],
     widgets["refine_previousplayers"],
-    widgets["refine_numplays"]
+    widgets["refine_numplays"],
+    widgets["gameCounter"] // ADD THIS NEW WIDGET
   ]);
 
   search.start();
