@@ -32,18 +32,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 </select>
               </div>
               
-              <!-- Complexity selection -->
+              <!-- Replaced slider with dropdown for complexity -->
               <div class="welcome-form-group">
-                <label for="complexity">Game Complexity:</label>
-                <div class="complexity-slider-container">
-                  <input type="range" min="1" max="5" value="3" class="complexity-slider" id="complexity-slider">
-                  <div class="complexity-labels">
-                    <span>Light</span>
-                    <span>Medium</span>
-                    <span>Heavy</span>
-                  </div>
-                </div>
-                <div class="complexity-value" id="complexity-value">Medium</div>
+                <label for="complexity-select">Game Complexity:</label>
+                <select id="complexity-select">
+                  <option value="">Any complexity</option>
+                  <option value="Light">Light</option>
+                  <option value="Light Medium">Light Medium</option>
+                  <option value="Medium">Medium</option>
+                  <option value="Medium Heavy">Medium Heavy</option>
+                  <option value="Heavy">Heavy</option>
+                </select>
               </div>
               
               <!-- Sort by options -->
@@ -65,67 +64,6 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
       </div>
     `;
-    
-    // Add CSS for the new complexity slider
-    const sliderCSS = `
-      <style>
-        .complexity-slider-container {
-          width: 100%;
-          margin: 10px 0;
-        }
-        
-        .complexity-slider {
-          width: 100%;
-          height: 8px;
-          -webkit-appearance: none;
-          appearance: none;
-          background: #f1f1f1;
-          outline: none;
-          border-radius: 4px;
-        }
-        
-        .complexity-slider::-webkit-slider-thumb {
-          -webkit-appearance: none;
-          appearance: none;
-          width: 20px;
-          height: 20px;
-          border-radius: 50%;
-          background: var(--main);
-          cursor: pointer;
-        }
-        
-        .complexity-slider::-moz-range-thumb {
-          width: 20px;
-          height: 20px;
-          border-radius: 50%;
-          background: var(--main);
-          cursor: pointer;
-          border: none;
-        }
-        
-        .complexity-labels {
-          display: flex;
-          justify-content: space-between;
-          margin-top: 5px;
-          font-size: 12px;
-          color: var(--dark);
-        }
-        
-        .complexity-value {
-          text-align: center;
-          margin-top: 5px;
-          font-weight: bold;
-          color: var(--main);
-        }
-        
-        .welcome-form-group {
-          margin-bottom: 20px;
-        }
-      </style>
-    `;
-    
-    // Add the CSS to the page
-    document.head.insertAdjacentHTML('beforeend', sliderCSS);
     
     // Add the HTML to the page
     document.body.insertAdjacentHTML('beforeend', welcomePopupHTML);
@@ -149,28 +87,8 @@ function initWelcomePopup() {
   
   // User selections
   const playerCount = document.getElementById('player-count');
-  const complexitySlider = document.getElementById('complexity-slider');
-  const complexityValue = document.getElementById('complexity-value');
+  const complexitySelect = document.getElementById('complexity-select');
   const sortByWelcome = document.getElementById('sort-by-welcome');
-  
-  // Initialize complexity slider value display
-  updateComplexityValue(complexitySlider.value);
-  
-  // Update complexity text when slider moves
-  complexitySlider.addEventListener('input', function() {
-    updateComplexityValue(this.value);
-  });
-  
-  function updateComplexityValue(value) {
-    const complexityLabels = {
-      '1': 'Light',
-      '2': 'Light Medium',
-      '3': 'Medium',
-      '4': 'Medium Heavy',
-      '5': 'Heavy'
-    };
-    complexityValue.textContent = complexityLabels[value];
-  }
   
   // Close functionality
   function closeWelcomePopup() {
@@ -267,158 +185,96 @@ function initWelcomePopup() {
     }
   }
   
-  // Function to inspect complexity filters
-  function inspectComplexityFilters() {
-    console.log("Inspecting complexity filters...");
-    const complexityItems = document.querySelectorAll('#facet-weight .ais-RefinementList-item');
+  // Debug function to directly manipulate checkboxes
+  function clickComplexityCheckbox(complexityText) {
+    if (!complexityText) return false;
     
-    if (complexityItems.length === 0) {
-      console.log("No complexity filters found! The selector might be incorrect.");
-    }
+    console.log(`Looking for complexity checkbox for: "${complexityText}"`);
     
-    complexityItems.forEach((item, index) => {
-      const label = item.querySelector('.ais-RefinementList-label');
-      const text = label ? label.textContent.trim() : 'No label found';
-      console.log(`Complexity filter ${index}: "${text}"`);
-      
-      // Also log the HTML structure to see what's inside
-      console.log("Element HTML:", item.outerHTML);
-    });
-    
-    // Also check if the facet-weight element exists
-    const facetWeight = document.getElementById('facet-weight');
-    if (facetWeight) {
-      console.log("facet-weight element found");
-      console.log("facet-weight HTML:", facetWeight.outerHTML);
-    } else {
-      console.log("facet-weight element NOT found!");
-    }
-  }
-  
-  // Function to force-click complexity filter by simulating a mousedown and mouseup event
-  function forceClickElement(element) {
-    if (!element) {
-      console.log("Cannot force-click null element");
-      return false;
-    }
-    
-    try {
-      // Create and dispatch mousedown event
-      const mouseDown = new MouseEvent('mousedown', {
-        bubbles: true,
-        cancelable: true,
-        view: window
-      });
-      element.dispatchEvent(mouseDown);
-      
-      // Create and dispatch mouseup event
-      const mouseUp = new MouseEvent('mouseup', {
-        bubbles: true,
-        cancelable: true,
-        view: window
-      });
-      element.dispatchEvent(mouseUp);
-      
-      // Create and dispatch click event
-      const click = new MouseEvent('click', {
-        bubbles: true,
-        cancelable: true,
-        view: window
-      });
-      element.dispatchEvent(click);
-      
-      console.log("Force-clicked element:", element);
-      return true;
-    } catch (error) {
-      console.error("Error force-clicking element:", error);
-      return false;
-    }
-  }
-  
-  // Function to apply complexity filter with multiple methods
-  function applyComplexityFilter(complexityText) {
     // Wait for facets to load
     setTimeout(() => {
-      console.log(`Attempting to apply complexity filter: ${complexityText}`);
-      
-      // First, inspect all available complexity options for debugging
-      inspectComplexityFilters();
-      
-      // Try several methods to click the complexity filter
-      
-      // Method 1: Direct querySelector with more specific selector
-      const specificSelector = `#facet-weight .ais-RefinementList-label[title="${complexityText}"], #facet-weight .ais-RefinementList-labelText[title="${complexityText}"]`;
-      const specificElement = document.querySelector(specificSelector);
-      
-      if (specificElement) {
-        console.log(`Method 1: Found complexity filter with specific selector: "${complexityText}"`);
-        forceClickElement(specificElement);
-        return;
+      // First, check if we can find the weight facet
+      const weightFacet = document.getElementById('facet-weight');
+      if (!weightFacet) {
+        console.log("ERROR: facet-weight element not found!");
+        return false;
       }
       
-      // Method 2: Find by text content
-      const complexityItems = document.querySelectorAll('#facet-weight .ais-RefinementList-item');
+      // Find all labels in the weight facet
+      const labels = weightFacet.querySelectorAll('.ais-RefinementList-label');
+      console.log(`Found ${labels.length} complexity options`);
+      
+      // Log all available options
+      labels.forEach((label, index) => {
+        console.log(`Option ${index}: "${label.textContent.trim()}"`);
+      });
+      
+      // Try to find and click the matching label
       let found = false;
       
-      complexityItems.forEach(item => {
-        if (found) return; // Skip if already found
-        
-        const label = item.querySelector('.ais-RefinementList-label');
-        if (!label) return;
+      labels.forEach(label => {
+        if (found) return;
         
         const text = label.textContent.trim();
         if (text === complexityText) {
-          console.log(`Method 2: Found exact match for complexity: "${complexityText}"`);
-          forceClickElement(label);
-          found = true;
-          return;
-        }
-      });
-      
-      // Method 3: Try clicking the actual checkbox
-      if (!found) {
-        complexityItems.forEach(item => {
-          if (found) return; // Skip if already found
+          console.log(`Found exact match for complexity: "${text}"`);
           
-          const label = item.querySelector('.ais-RefinementList-label');
-          const checkbox = item.querySelector('.ais-RefinementList-checkbox');
+          // Try direct click
+          label.click();
           
-          if (!label || !checkbox) return;
-          
-          const text = label.textContent.trim();
-          if (text === complexityText) {
-            console.log(`Method 3: Found checkbox for complexity: "${complexityText}"`);
+          // Also try to find and check the checkbox
+          const checkbox = label.querySelector('input[type="checkbox"]');
+          if (checkbox) {
             checkbox.checked = true;
             const event = new Event('change', { bubbles: true });
             checkbox.dispatchEvent(event);
-            found = true;
-            return;
+            console.log("Clicked checkbox directly");
           }
-        });
-      }
-      
-      // Method 4: Try finding a partial match
-      if (!found) {
-        complexityItems.forEach(item => {
-          if (found) return; // Skip if already found
           
-          const label = item.querySelector('.ais-RefinementList-label');
-          if (!label) return;
+          found = true;
+        }
+      });
+      
+      if (!found) {
+        // If no exact match, try case-insensitive match
+        labels.forEach(label => {
+          if (found) return;
           
           const text = label.textContent.trim();
-          if (text.includes(complexityText)) {
-            console.log(`Method 4: Found partial match for complexity: "${text}" contains "${complexityText}"`);
-            forceClickElement(label);
+          if (text.toLowerCase() === complexityText.toLowerCase()) {
+            console.log(`Found case-insensitive match for complexity: "${text}"`);
+            label.click();
             found = true;
-            return;
           }
         });
       }
       
       if (!found) {
-        console.log(`Could not find any matches for complexity: "${complexityText}"`);
+        console.log(`No match found for complexity: "${complexityText}"`);
+        
+        // Last resort: Try to get all checkboxes
+        const checkboxes = weightFacet.querySelectorAll('input[type="checkbox"]');
+        console.log(`Found ${checkboxes.length} checkboxes`);
+        
+        // Map of expected values to checkbox indices
+        const complexityIndices = {
+          'Light': 0,
+          'Light Medium': 1,
+          'Medium': 2,
+          'Medium Heavy': 3,
+          'Heavy': 4
+        };
+        
+        const index = complexityIndices[complexityText];
+        if (index !== undefined && index < checkboxes.length) {
+          const checkbox = checkboxes[index];
+          checkbox.checked = true;
+          const event = new Event('change', { bubbles: true });
+          checkbox.dispatchEvent(event);
+          console.log(`Clicked checkbox at index ${index}`);
+        }
       }
-    }, 1000); // Wait a full second to ensure UI is loaded
+    }, 1000);
   }
   
   // Apply filters function
@@ -433,30 +289,21 @@ function initWelcomePopup() {
       // Apply player count filter if selected
       if (playerCount.value) {
         console.log(`Applying player filter: ${playerCount.value}`);
-        // Use the improved player count filter function
         clickPlayerCountFilter(playerCount.value);
       }
       
-      // Apply complexity filter based on slider value
-      const complexityValue = document.getElementById('complexity-slider').value;
-      const complexityLabels = {
-        '1': 'Light',
-        '2': 'Light Medium',
-        '3': 'Medium',
-        '4': 'Medium Heavy',
-        '5': 'Heavy'
-      };
-      const complexityText = complexityLabels[complexityValue];
-      
-      console.log(`Applying complexity filter: ${complexityText}`);
-      applyComplexityFilter(complexityText);
+      // Apply complexity filter if selected
+      if (complexitySelect.value) {
+        console.log(`Applying complexity filter: ${complexitySelect.value}`);
+        clickComplexityCheckbox(complexitySelect.value);
+      }
       
       // Apply sort option
       if (sortByWelcome.value) {
         console.log(`Applying sort option: ${sortByWelcome.value}`);
         applySortOption(sortByWelcome.value);
       }
-    }, 500);
+    }, 800);
   }
   
   // Event listeners
