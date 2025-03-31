@@ -178,31 +178,94 @@ function initWelcomePopup() {
     document.body.style.overflow = 'auto';
   }
   
-  // Function to simulate clicking on a facet label
-  function clickFacetLabel(selector, targetText) {
-    // Wait a short time to ensure facets are loaded
+  // Function to directly select a dropdown option
+  function selectDropdownOption(selector, optionText) {
+    const dropdown = document.querySelector(selector);
+    if (!dropdown) {
+      console.log(`Dropdown not found: ${selector}`);
+      return false;
+    }
+    
+    for (let i = 0; i < dropdown.options.length; i++) {
+      if (dropdown.options[i].text.includes(optionText)) {
+        dropdown.selectedIndex = i;
+        
+        // Trigger change event
+        const event = new Event('change', { bubbles: true });
+        dropdown.dispatchEvent(event);
+        
+        console.log(`Selected option: ${optionText} in dropdown ${selector}`);
+        return true;
+      }
+    }
+    
+    console.log(`Option with text ${optionText} not found in dropdown ${selector}`);
+    return false;
+  }
+  
+  // Function to inspect player filters to better understand the format
+  function inspectPlayerFilters() {
+    console.log("Inspecting player filters...");
+    const playerFilters = document.querySelectorAll('#facet-players .ais-HierarchicalMenu-item');
+    
+    playerFilters.forEach(filter => {
+      const label = filter.querySelector('.ais-HierarchicalMenu-label');
+      const text = label ? label.textContent.trim() : 'No label found';
+      console.log(`Player filter: ${text}`);
+    });
+  }
+  
+  // Function to find and click specific player count filter by examining all available options
+  function clickPlayerCountFilter(playerCount) {
+    // Wait for facets to load
     setTimeout(() => {
-      const elements = document.querySelectorAll(selector);
+      // First, inspect available player filters
+      inspectPlayerFilters();
       
-      // For debugging
-      console.log(`Looking for filter with text containing "${targetText}" among ${elements.length} elements`);
+      // Try to find exact match for the player count
+      const playerFilters = document.querySelectorAll('#facet-players .ais-HierarchicalMenu-item');
       
       let found = false;
-      elements.forEach(element => {
-        const text = element.textContent.trim();
-        console.log(`Checking element with text: "${text}"`);
+      playerFilters.forEach(filter => {
+        const label = filter.querySelector('.ais-HierarchicalMenu-label');
+        if (!label) return;
         
-        if (text.includes(targetText)) {
-          console.log(`Found matching element: "${text}"`);
-          element.click();
+        const text = label.textContent.trim();
+        
+        // Check if the player count matches the exact number
+        // Note: This matching logic may need to be adjusted based on the actual format of your player filters
+        if (text === playerCount || text === `${playerCount}`) {
+          console.log(`Found exact match for player count ${playerCount}: "${text}"`);
+          label.click();
           found = true;
+          return;
         }
       });
       
       if (!found) {
-        console.log(`No element found with text containing "${targetText}"`);
+        console.log(`No exact match found for player count ${playerCount}, looking for closest match...`);
+        
+        // If no exact match, try to find first level menu items
+        playerFilters.forEach(filter => {
+          const label = filter.querySelector('.ais-HierarchicalMenu-label');
+          if (!label) return;
+          
+          const text = label.textContent.trim();
+          
+          // Try to match just the number without additional text
+          if (text.startsWith(playerCount) || text === playerCount) {
+            console.log(`Found closest match for player count ${playerCount}: "${text}"`);
+            label.click();
+            found = true;
+            return;
+          }
+        });
       }
-    }, 500); // Wait 500ms to ensure UI is loaded
+      
+      if (!found) {
+        console.log(`Could not find any match for player count ${playerCount}`);
+      }
+    }, 800); // Increase timeout to ensure UI is fully loaded
   }
   
   // Apply selected sort option
@@ -230,6 +293,38 @@ function initWelcomePopup() {
     }
   }
   
+  // Function to click on complexity filter
+  function clickComplexityFilter(complexityText) {
+    // Wait for facets to load
+    setTimeout(() => {
+      console.log(`Looking for complexity filter: ${complexityText}`);
+      
+      // First, log all available complexity options
+      const complexityItems = document.querySelectorAll('#facet-weight .ais-RefinementList-item');
+      complexityItems.forEach(item => {
+        const label = item.querySelector('.ais-RefinementList-label');
+        if (label) {
+          console.log(`Available complexity: "${label.textContent.trim()}"`);
+        }
+      });
+      
+      // Find and click the exact match
+      let found = false;
+      complexityItems.forEach(item => {
+        const label = item.querySelector('.ais-RefinementList-label');
+        if (label && label.textContent.trim() === complexityText) {
+          console.log(`Found exact match for complexity: "${complexityText}"`);
+          label.click();
+          found = true;
+        }
+      });
+      
+      if (!found) {
+        console.log(`No exact match found for complexity: "${complexityText}"`);
+      }
+    }, 800);
+  }
+  
   // Apply filters function
   function applyPreferences() {
     // Close the popup first
@@ -242,8 +337,8 @@ function initWelcomePopup() {
       // Apply player count filter if selected
       if (playerCount.value) {
         console.log(`Applying player filter: ${playerCount.value}`);
-        // Find and click the player count filter
-        clickFacetLabel('#facet-players .ais-HierarchicalMenu-label', playerCount.value);
+        // Use the improved player count filter function
+        clickPlayerCountFilter(playerCount.value);
       }
       
       // Apply complexity filter based on slider value
@@ -258,7 +353,7 @@ function initWelcomePopup() {
       const complexityText = complexityLabels[complexityValue];
       
       console.log(`Applying complexity filter: ${complexityText}`);
-      clickFacetLabel('#facet-weight .ais-RefinementList-label', complexityText);
+      clickComplexityFilter(complexityText);
       
       // Apply sort option
       if (sortByWelcome.value) {
