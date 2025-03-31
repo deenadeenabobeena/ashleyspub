@@ -182,7 +182,7 @@ details > summary:first-of-type {
     padding-top: 1px;
 }
 
-#facet-min-age {
+#facet-min-age, #facet-numplays {
     display: none;
 }
 
