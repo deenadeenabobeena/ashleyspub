@@ -149,7 +149,7 @@ details > summary:first-of-type {
 
 .game-counter {
     color: white;
-    margin-left: 20px;
+    margin-right: 20px;
     font-weight: 700;
     display: flex;
     align-items: left;
