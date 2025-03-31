@@ -224,7 +224,7 @@ function get_widgets(SETTINGS) {
       container: '#hits',
       transformItems: function(items) {
         hide_facet_when_no_data('#facet-previous-players', items, 'previous_players');
-        hide_facet_when_no_data('#facet-numplays', items, 'numplays');
+        
 
         return items.map(function(game){
           players = [];
