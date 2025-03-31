@@ -50,10 +50,9 @@ document.addEventListener('DOMContentLoaded', function() {
               <div class="welcome-form-group">
                 <label for="sort-by-welcome">Sort Games By:</label>
                 <select id="sort-by-welcome">
+                <option value="rank">Best</option>
                   <option value="name">Name</option>
-                  <option value="rank">BGG Rank</option>
-                  <option value="rating">Number of Ratings</option>
-                  <option value="owned">Number of Owners</option>
+                  <option value="owned">Popularity</option>
                 </select>
               </div>
             </div>
