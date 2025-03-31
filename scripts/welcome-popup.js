@@ -352,25 +352,3 @@ function resetWelcomePopup() {
     window.location.reload();
   }, 300);
 }
-
-// Add this code to create a reset button (useful for testing)
-document.addEventListener('DOMContentLoaded', function() {
-  // Create a small button in the corner to reset the welcome popup
-  const resetButton = document.createElement('button');
-  resetButton.innerHTML = 'Reset Welcome';
-  resetButton.style.position = 'fixed';
-  resetButton.style.bottom = '60px';
-  resetButton.style.right = '10px';
-  resetButton.style.zIndex = '999';
-  resetButton.style.fontSize = '12px';
-  resetButton.style.padding = '5px';
-  resetButton.style.background = '#f1f1f1';
-  resetButton.style.border = '1px solid #ccc';
-  resetButton.style.borderRadius = '4px';
-  resetButton.style.cursor = 'pointer';
-  resetButton.style.opacity = '0.7';
-  
-  resetButton.addEventListener('click', resetWelcomePopup);
-  
-  document.body.appendChild(resetButton);
-});
