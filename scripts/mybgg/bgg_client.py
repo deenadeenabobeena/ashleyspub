@@ -10,7 +10,7 @@ from requests_cache import CachedSession
 logger = logging.getLogger(__name__)
 
 class BGGClient:
-    BASE_URL = "https://www.boardgamegeek.com/xmlapi2"
+    BASE_URL = "https://boardgamegeek.com/xmlapi2"
 
     def __init__(self, cache=None, debug=False):
         if not cache:
@@ -91,9 +91,12 @@ class BGGClient:
             """Sleep with exponential backoff and jitter."""
             sleep_time = base_time * 2 ** tries * random.uniform(1 - jitter_factor, 1 + jitter_factor)
             time.sleep(sleep_time)
-
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+            'Authorization': 'Bearer a42f26f4-665b-4947-a8a8-88736b03a752'
+        }
         try:
-            response = self.requester.get(BGGClient.BASE_URL + url, params=params)
+            response = self.requester.get(BGGClient.BASE_URL + url, params=params, headers=headers)
             response.raise_for_status()  # This will raise an exception for 4xx and 5xx status codes
         except (
             requests.exceptions.HTTPError,
