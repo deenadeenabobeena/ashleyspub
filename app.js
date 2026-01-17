@@ -505,4 +505,3 @@ async function logPlay(event, gameId) {
 }
 
 loadJSON("config.json", init);
-loadJSON("config.json", init);
