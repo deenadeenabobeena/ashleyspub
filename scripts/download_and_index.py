@@ -91,29 +91,4 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    main(args)        )
-    )
-    parser.add_argument(
-        '--cache_bgg',
-        action='store_true',
-        help=(
-            "Enable a cache for all BGG calls. This makes script run very "
-            "fast the second time it's run."
-        )
-    )
-    parser.add_argument(
-        '--debug',
-        action='store_true',
-        help="Print debug information, such as requests made and responses received."
-    )
-    parser.add_argument(
-        '--config',
-        type=str,
-        required=False,
-        default="config.json",
-        help="Path to the config file (default: config.json from the working directory)."
-    )
-
-    args = parser.parse_args()
-
     main(args)
