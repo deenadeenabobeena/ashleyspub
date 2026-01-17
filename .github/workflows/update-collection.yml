@@ -1,0 +1,37 @@
+name: Update Board Game Collection
+
+on:
+  schedule:
+    # Runs every Sunday at 2:00 AM UTC
+    - cron: '0 2 * * 0'
+  workflow_dispatch:  # Allows manual triggering from GitHub Actions tab
+
+jobs:
+  update-collection:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+    
+    - name: Install dependencies
+      run: |
+        cd scripts
+        pip install -r requirements.in
+    
+    - name: Run update script
+      env:
+        ALGOLIA_KEY: ${{ secrets.ALGOLIA_ADMIN_KEY }}
+        BGG_TOKEN: ${{ secrets.BGG_TOKEN }}
+      run: |
+        cd scripts
+        python download_and_index.py --apikey $ALGOLIA_KEY --bgg_token $BGG_TOKEN --config ../config.json
+    
+    - name: Notify on failure
+      if: failure()
+      run: echo "Collection update failed! Check the Actions logs for details."
