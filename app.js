@@ -451,5 +451,58 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 });
+/**
+ * Log a play to BoardGameGeek via Cloudflare Worker
+ */
+async function logPlay(event, gameId) {
+  event.stopPropagation(); // Prevent the details from closing
+  
+  const button = event.target;
+  const messageSpan = button.parentElement.querySelector('.log-play-message');
+  
+  // Disable button and show loading state
+  button.disabled = true;
+  button.textContent = '⏳ Logging...';
+  messageSpan.textContent = '';
+  
+  try {
+    const response = await fetch('https://ashleyspub-log-play.db-chan.workers.dev', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ gameId: gameId }),
+    });
+    
+    if (response.ok) {
+      // Success!
+      button.textContent = '✅ Logged!';
+      messageSpan.textContent = 'Play logged successfully!';
+      messageSpan.style.color = '#4CAF50';
+      
+      // Reset button after 3 seconds
+      setTimeout(() => {
+        button.disabled = false;
+        button.textContent = '🎲 We played this!';
+        messageSpan.textContent = '';
+      }, 3000);
+    } else {
+      throw new Error('Failed to log play');
+    }
+  } catch (error) {
+    console.error('Error logging play:', error);
+    button.textContent = '❌ Failed';
+    messageSpan.textContent = 'Failed to log play. Try again?';
+    messageSpan.style.color = '#f44336';
+    
+    // Reset button after 3 seconds
+    setTimeout(() => {
+      button.disabled = false;
+      button.textContent = '🎲 We played this!';
+      messageSpan.textContent = '';
+    }, 3000);
+  }
+}
 
+loadJSON("config.json", init);
 loadJSON("config.json", init);
