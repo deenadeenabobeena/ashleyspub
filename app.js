@@ -477,6 +477,7 @@ async function logPlay(event, gameId) {
     if (response.ok) {
       // Success!
       button.textContent = '✅ Logged!';
+      button.disabled = false;
       messageSpan.textContent = 'Play logged successfully!';
       messageSpan.style.color = '#4CAF50';
       
@@ -499,5 +500,4 @@ async function logPlay(event, gameId) {
   }
 }
 
-loadJSON("config.json", init);
 loadJSON("config.json", init);
