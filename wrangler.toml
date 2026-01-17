@@ -2,4 +2,9 @@ name = "ashleyspub-log-play"
 main = "worker.js"
 compatibility_date = "2024-01-01"
 
+[observability]
+[observability.logs]
+enabled = false
+invocation_logs = true
+
 # This worker will be accessible at: https://ashleyspub-log-play.YOUR-SUBDOMAIN.workers.dev
