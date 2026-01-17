@@ -106,6 +106,12 @@
            </div>
            {{/ has_expansions }}
          </dl>
+    <div class="log-play-section">
+           <button class="log-play-btn" data-game-id="{{ id }}" onclick="logPlay(event, {{ id }})">
+             🎲 We played this!
+           </button>
+           <span class="log-play-message"></span>
+         </div>
        </div>
        </div>
      </details>
