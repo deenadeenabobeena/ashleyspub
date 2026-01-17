@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 class BGGClient:
     BASE_URL = "https://boardgamegeek.com/xmlapi2"
 
-    def __init__(self, cache=None, debug=False):
+    def __init__(self, cache=None, debug=False, bgg_token=None):
         if not cache:
             self.requester = requests.Session()
         else:
@@ -20,6 +20,8 @@ class BGGClient:
 
         if debug:
             logging.basicConfig(level=logging.DEBUG)
+        
+        self.bgg_token = bgg_token
 
     def collection(self, user_name, **kwargs):
         params = kwargs.copy()
@@ -91,10 +93,15 @@ class BGGClient:
             """Sleep with exponential backoff and jitter."""
             sleep_time = base_time * 2 ** tries * random.uniform(1 - jitter_factor, 1 + jitter_factor)
             time.sleep(sleep_time)
+        
         headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-            'Authorization': 'Bearer a42f26f4-665b-4947-a8a8-88736b03a752'
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
         }
+        
+        # Add BGG authorization token if provided
+        if self.bgg_token:
+            headers['Authorization'] = f'Bearer {self.bgg_token}'
+        
         try:
             response = self.requester.get(BGGClient.BASE_URL + url, params=params, headers=headers)
             response.raise_for_status()  # This will raise an exception for 4xx and 5xx status codes
