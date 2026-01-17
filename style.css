@@ -1155,3 +1155,62 @@ details > summary:first-of-type {
         font-size: 14px;
     }
 }
+/* =============================================
+   LOG PLAY BUTTON
+   ============================================= */
+/* Log Play Button Section */
+.log-play-section {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.log-play-btn {
+    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 700;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+    font-family: 'nunito_sans', 'Calibri', sans-serif;
+}
+
+.log-play-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.log-play-btn:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.log-play-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.log-play-message {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+/* Mobile adjustments */
+@media only screen and (max-width: 899px) {
+    .log-play-section {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+    
+    .log-play-btn {
+        width: 100%;
+        padding: 12px;
+    }
+}
