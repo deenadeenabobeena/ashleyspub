@@ -4,7 +4,7 @@ from mybgg.models import BoardGame
 
 
 class Downloader():
-    def __init__(self, project_name, cache_bgg, debug=False):
+    def __init__(self, project_name, cache_bgg, debug=False, bgg_token=None):
         if cache_bgg:
             self.client = BGGClient(
                 cache=CacheBackendSqlite(
@@ -12,10 +12,12 @@ class Downloader():
                     ttl=60 * 60 * 24,
                 ),
                 debug=debug,
+                bgg_token=bgg_token,
             )
         else:
             self.client = BGGClient(
                 debug=debug,
+                bgg_token=bgg_token,
             )
 
     def collection(self, user_name, extra_params):
