@@ -480,12 +480,7 @@ async function logPlay(event, gameId) {
       messageSpan.textContent = 'Play logged successfully!';
       messageSpan.style.color = '#4CAF50';
       
-      // Reset button after 3 seconds
-      setTimeout(() => {
-        button.disabled = false;
-        button.textContent = '🎲 We played this!';
-        messageSpan.textContent = '';
-      }, 3000);
+   
     } else {
       throw new Error('Failed to log play');
     }
@@ -500,7 +495,7 @@ async function logPlay(event, gameId) {
       button.disabled = false;
       button.textContent = '🎲 We played this!';
       messageSpan.textContent = '';
-    }, 3000);
+    }, 5000);
   }
 }
 
