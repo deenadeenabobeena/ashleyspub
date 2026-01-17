@@ -477,11 +477,15 @@ async function logPlay(event, gameId) {
     if (response.ok) {
       // Success!
       button.textContent = '✅ Logged!';
-      button.disabled = false;
       messageSpan.textContent = 'Play logged successfully!';
       messageSpan.style.color = '#4CAF50';
       
-   
+      // Reset button after 3 seconds
+      setTimeout(() => {
+        button.disabled = false;
+        button.textContent = '🎲 We played this!';
+        messageSpan.textContent = '';
+      }, 3000);
     } else {
       throw new Error('Failed to log play');
     }
@@ -496,8 +500,9 @@ async function logPlay(event, gameId) {
       button.disabled = false;
       button.textContent = '🎲 We played this!';
       messageSpan.textContent = '';
-    }, 5000);
+    }, 3000);
   }
 }
 
+loadJSON("config.json", init);
 loadJSON("config.json", init);
