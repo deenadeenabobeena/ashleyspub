@@ -353,7 +353,10 @@ function init(SETTINGS) {
 
   search.on('render', on_render);
 
-  // Track searches after each render
+ // Track searches after each render (with debouncing)
+  let searchTimeout;
+  let lastLoggedSearch = '';
+  
   search.on('render', function() {
     const helper = search.helper;
     if (helper && helper.lastResults) {
@@ -369,12 +372,28 @@ function init(SETTINGS) {
         resultsCount: helper.lastResults.nbHits,
       };
       
-      // Only log if there's actual search activity (query or refinements)
+      // Create a unique key for this search to avoid duplicates
+      const searchKey = JSON.stringify({
+        q: searchState.query,
+        r: searchState.refinements
+      });
+      
+      // Only log if there's actual search activity
       const hasQuery = searchState.query && searchState.query.length > 0;
       const hasRefinements = Object.values(searchState.refinements).some(r => r.length > 0);
       
       if (hasQuery || hasRefinements) {
-        logSearch(searchState);
+        // Clear previous timeout
+        clearTimeout(searchTimeout);
+        
+        // Wait 1 second after they stop typing before logging
+        searchTimeout = setTimeout(function() {
+          // Only log if this is a different search than last time
+          if (searchKey !== lastLoggedSearch) {
+            logSearch(searchState);
+            lastLoggedSearch = searchKey;
+          }
+        }, 1000); // 1 second delay
       }
     }
   });
