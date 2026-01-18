@@ -516,15 +516,12 @@ async function reportIssue(event, gameId) {
   const button = event.target;
   const gameName = button.getAttribute('data-game-name');
   
-  // Ask user for issue type
-  const issueType = prompt(`What's wrong with ${gameName}?\n\nOptions:\n- missing pieces\n- damaged\n- instructions unclear\n- other\n\nType your answer:`);
+// Ask user what's wrong
+  const issueDescription = prompt(`What's wrong with ${gameName}?\n\nExamples: missing pieces, damaged box, no instructions, etc.`);
   
-  if (!issueType || issueType.trim() === '') {
+  if (!issueDescription || issueDescription.trim() === '') {
     return; // User cancelled
   }
-  
-  // Ask for details (optional)
-  const issueDetails = prompt('Any additional details? (optional)');
   
   // Disable button and show loading state
   const originalText = button.textContent;
@@ -537,18 +534,18 @@ async function reportIssue(event, gameId) {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ 
+     body: JSON.stringify({ 
         gameId: gameId,
         gameName: gameName,
-        issueType: issueType.trim(),
-        issueDetails: issueDetails ? issueDetails.trim() : ''
+        issueType: issueDescription.trim(),
+        issueDetails: ''
       }),
     });
     
     if (response.ok) {
       // Success!
       button.textContent = '✅ Reported!';
-      alert('Thank you! Ashley will look into this issue.');
+      alert('Thank you! We will look into this issue.');
       
       // Reset button after 5 seconds
       setTimeout(() => {
@@ -561,7 +558,7 @@ async function reportIssue(event, gameId) {
   } catch (error) {
     console.error('Error reporting issue:', error);
     button.textContent = '❌ Failed';
-    alert('Failed to report issue. Please try again or tell Ashley in person.');
+    alert('Failed to report issue. Please try again or let the bartender know.');
     
     // Reset button after 5 seconds
     setTimeout(() => {
