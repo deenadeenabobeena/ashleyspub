@@ -489,7 +489,7 @@ async function logPlay(event, gameId) {
         button.disabled = false;
         button.textContent = '🎲 We played this!';
         messageSpan.textContent = '';
-      }, 3000);
+      }, 10000);
     } else {
       throw new Error('Failed to log play');
     }
@@ -504,7 +504,7 @@ async function logPlay(event, gameId) {
       button.disabled = false;
       button.textContent = '🎲 We played this!';
       messageSpan.textContent = '';
-    }, 3000);
+    }, 10000);
   }
 }
 
