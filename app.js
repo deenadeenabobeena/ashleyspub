@@ -507,5 +507,67 @@ async function logPlay(event, gameId) {
     }, 10000);
   }
 }
-
+/**
+ * Report an issue with a game
+ */
+async function reportIssue(event, gameId) {
+  event.stopPropagation(); // Prevent the details from closing
+  
+  const button = event.target;
+  const gameName = button.getAttribute('data-game-name');
+  
+  // Ask user for issue type
+  const issueType = prompt(`What's wrong with ${gameName}?\n\nOptions:\n- missing pieces\n- damaged\n- instructions unclear\n- other\n\nType your answer:`);
+  
+  if (!issueType || issueType.trim() === '') {
+    return; // User cancelled
+  }
+  
+  // Ask for details (optional)
+  const issueDetails = prompt('Any additional details? (optional)');
+  
+  // Disable button and show loading state
+  const originalText = button.textContent;
+  button.disabled = true;
+  button.textContent = '⏳ Reporting...';
+  
+  try {
+    const response = await fetch('https://ashleyspub-log-play.db-chan.workers.dev/report', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ 
+        gameId: gameId,
+        gameName: gameName,
+        issueType: issueType.trim(),
+        issueDetails: issueDetails ? issueDetails.trim() : ''
+      }),
+    });
+    
+    if (response.ok) {
+      // Success!
+      button.textContent = '✅ Reported!';
+      alert('Thank you! Ashley will look into this issue.');
+      
+      // Reset button after 5 seconds
+      setTimeout(() => {
+        button.disabled = false;
+        button.textContent = originalText;
+      }, 5000);
+    } else {
+      throw new Error('Failed to report issue');
+    }
+  } catch (error) {
+    console.error('Error reporting issue:', error);
+    button.textContent = '❌ Failed';
+    alert('Failed to report issue. Please try again or tell Ashley in person.');
+    
+    // Reset button after 5 seconds
+    setTimeout(() => {
+      button.disabled = false;
+      button.textContent = originalText;
+    }, 5000);
+  }
+}
 loadJSON("config.json", init);
