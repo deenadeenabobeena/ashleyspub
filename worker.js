@@ -23,9 +23,19 @@ export default {
       return handleLogPlay(request, env);
     }
 
+    // POST: Report an issue
+    if (request.method === 'POST' && url.pathname === '/report') {
+      return handleReportIssue(request, env);
+    }
+
     // GET: Retrieve recent plays (for future display on website)
     if (request.method === 'GET' && url.pathname === '/plays') {
       return handleGetPlays(env);
+    }
+
+    // GET: Retrieve recent reports
+    if (request.method === 'GET' && url.pathname === '/reports') {
+      return handleGetReports(env);
     }
 
     return new Response('Not found', { status: 404 });
@@ -147,6 +157,131 @@ async function handleGetPlays(env) {
   } catch (error) {
     console.error('Error retrieving plays:', error);
     return new Response('Error retrieving plays', { 
+      status: 500,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+      },
+    });
+  }
+}
+
+/**
+ * Report an issue with a game
+ */
+async function handleReportIssue(request, env) {
+  try {
+    const { gameId, gameName, issueType, issueDetails } = await request.json();
+    
+    if (!gameId || !issueType) {
+      return new Response('Missing required fields', { 
+        status: 400,
+        headers: { 'Access-Control-Allow-Origin': '*' }
+      });
+    }
+
+    // Create report record
+    const timestamp = new Date().toISOString();
+    const reportId = `report_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    
+    const reportRecord = {
+      reportId,
+      gameId,
+      gameName: gameName || `Game ${gameId}`,
+      issueType,
+      issueDetails: issueDetails || '',
+      timestamp,
+      date: timestamp.split('T')[0], // YYYY-MM-DD format
+    };
+
+    // Store in KV
+    await env.PLAY_LOGS.put(reportId, JSON.stringify(reportRecord));
+
+    // Also maintain a list of recent reports (last 100)
+    let recentReports = [];
+    try {
+      const recentReportsData = await env.PLAY_LOGS.get('recent_reports_list');
+      if (recentReportsData) {
+        recentReports = JSON.parse(recentReportsData);
+      }
+    } catch (e) {
+      console.error('Error reading recent reports:', e);
+    }
+
+    // Add new report to the beginning
+    recentReports.unshift(reportRecord);
+    
+    // Keep only last 100 reports
+    if (recentReports.length > 100) {
+      recentReports = recentReports.slice(0, 100);
+    }
+
+    // Store updated list
+    await env.PLAY_LOGS.put('recent_reports_list', JSON.stringify(recentReports));
+
+    // Success!
+    return new Response(JSON.stringify({ 
+      success: true,
+      message: 'Issue reported successfully!',
+      reportId,
+    }), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      },
+    });
+
+  } catch (error) {
+    console.error('Error reporting issue:', error);
+    return new Response(JSON.stringify({
+      success: false,
+      message: 'Failed to report issue'
+    }), { 
+      status: 500,
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      },
+    });
+  }
+}
+
+/**
+ * Get recent reports from KV storage
+ */
+async function handleGetReports(env) {
+  try {
+    const recentReportsData = await env.PLAY_LOGS.get('recent_reports_list');
+    
+    if (!recentReportsData) {
+      return new Response(JSON.stringify({
+        reports: [],
+        count: 0
+      }), {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+        },
+      });
+    }
+
+    const reports = JSON.parse(recentReportsData);
+    
+    return new Response(JSON.stringify({
+      reports,
+      count: reports.length
+    }), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      },
+    });
+
+  } catch (error) {
+    console.error('Error retrieving reports:', error);
+    return new Response('Error retrieving reports', { 
       status: 500,
       headers: {
         'Access-Control-Allow-Origin': '*',
