@@ -155,6 +155,16 @@ details > summary:first-of-type {
     align-items: left;
     white-space: nowrap;
 }
+.search-stats {
+    color: white;
+    margin-right: 20px;
+    font-weight: 400;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    opacity: 0.9;
+}
 
 /* Filter Facets */
 .facets {
