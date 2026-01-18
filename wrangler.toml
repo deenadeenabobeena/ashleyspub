@@ -17,4 +17,16 @@ enabled = false
 persist = true
 head_sampling_rate = 1
 
+name = "ashleyspub-log-play"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+
+[observability]
+enabled = true
+invocation_logs = true
+
+[[kv_namespaces]]
+binding = "PLAY_LOGS"
+id = "2f33833ef303436e91afc4a4ec220379"
+
 # This worker will be accessible at: https://ashleyspub-log-play.YOUR-SUBDOMAIN.workers.dev
