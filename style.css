@@ -1162,13 +1162,10 @@ details > summary:first-of-type {
 .log-play-section {
     margin-top: 20px;
     padding-top: 15px;
-    padding-right: 120px; /* Make room for the report button */
+    padding-bottom: 40px; /* Make room for report button at bottom */
     border-top: 1px solid rgba(0, 0, 0, 0.1);
-    display: flex;
-    align-items: center;
-    gap: 10px;
     position: relative;
-    min-height: 60px;
+    display: block; /* Changed from flex */
 }
 
 .log-play-btn {
@@ -1222,7 +1219,12 @@ details > summary:first-of-type {
     margin-bottom: 10px;
     color: var(--dark);
 }
-   .report-issue-btn {
+.log-play-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.report-issue-btn {
     background: white;
     color: #d32f2f; /* Red text */
     border: 1px solid #e0e0e0;
