@@ -1169,7 +1169,7 @@ details > summary:first-of-type {
 }
 
 .log-play-btn {
-    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+    background: linear-gradient(135deg, #0099cc 0%, #007aa3 100%);
     color: white;
     border: none;
     padding: 10px 20px;
