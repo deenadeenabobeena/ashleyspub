@@ -379,7 +379,7 @@ function init(SETTINGS) {
       });
       
       // Only log if there's actual search activity
-      const hasQuery = searchState.query && searchState.query.length > 0;
+      const hasQuery = searchState.query && searchState.query.length >= 3; // Minimum 3 characters
       const hasRefinements = Object.values(searchState.refinements).some(r => r.length > 0);
       
       if (hasQuery || hasRefinements) {
