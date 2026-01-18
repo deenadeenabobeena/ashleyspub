@@ -393,7 +393,7 @@ function init(SETTINGS) {
             logSearch(searchState);
             lastLoggedSearch = searchKey;
           }
-        }, 1000); // 1 second delay
+        }, 3000); // 3 second delay
       }
     }
   });
