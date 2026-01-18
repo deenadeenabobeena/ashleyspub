@@ -1045,11 +1045,7 @@ details > summary:first-of-type {
 /* =============================================
    MEDIA QUERIES
    ============================================= */
-@media only screen and (min-width: 900px) {
-    .ais-SearchBox-reset {
-        display: none;
-    }
-}
+
 
 @media only screen and (max-width: 899px) {
     .facet .ais-Panel-body {
