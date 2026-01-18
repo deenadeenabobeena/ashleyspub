@@ -352,6 +352,32 @@ function init(SETTINGS) {
   });
 
   search.on('render', on_render);
+
+  // Track searches after each render
+  search.on('render', function() {
+    const helper = search.helper;
+    if (helper && helper.lastResults) {
+      const searchState = {
+        query: helper.state.query,
+        refinements: {
+          categories: helper.state.disjunctiveFacetsRefinements.categories || [],
+          mechanics: helper.state.disjunctiveFacetsRefinements.mechanics || [],
+          players: helper.state.hierarchicalFacetsRefinements.players || [],
+          weight: helper.state.disjunctiveFacetsRefinements.weight || [],
+          playing_time: helper.state.disjunctiveFacetsRefinements.playing_time || [],
+        },
+        resultsCount: helper.lastResults.nbHits,
+      };
+      
+      // Only log if there's actual search activity (query or refinements)
+      const hasQuery = searchState.query && searchState.query.length > 0;
+      const hasRefinements = Object.values(searchState.refinements).some(r => r.length > 0);
+      
+      if (hasQuery || hasRefinements) {
+        logSearch(searchState);
+      }
+    }
+  });
   
   // Create game counter element
   if (!document.getElementById('game-counter')) {
@@ -418,6 +444,8 @@ document.addEventListener('DOMContentLoaded', function() {
   // Feedback button functionality 
   const feedbackButton = document.getElementById('feedback-button');
   const feedbackPopup = document.getElementById('feedback-popup');
+  // Load search stats on page load
+  loadSearchStats();
   
   if (feedbackButton && feedbackPopup) {
     const closeButton = feedbackPopup.querySelector('.close');
@@ -567,4 +595,49 @@ async function reportIssue(event, gameId) {
     }, 5000);
   }
 }
+/**
+ * Log a search event
+ */
+async function logSearch(searchState) {
+  try {
+    const response = await fetch('https://ashleyspub-log-play.db-chan.workers.dev/search', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: searchState.query || '',
+        refinements: searchState.refinements || {},
+        resultsCount: searchState.resultsCount || 0,
+        timestamp: new Date().toISOString(),
+      }),
+    });
+    
+    if (!response.ok) {
+      console.warn('Failed to log search');
+    }
+  } catch (error) {
+    console.error('Error logging search:', error);
+  }
+}
+
+/**
+ * Load and display search stats
+ */
+async function loadSearchStats() {
+  try {
+    const response = await fetch('https://ashleyspub-log-play.db-chan.workers.dev/search-stats');
+    const data = await response.json();
+    
+    const searchStatsElement = document.getElementById('search-stats');
+    if (searchStatsElement && data.searchCount > 0) {
+      const monthName = new Date(data.currentMonth + '-01').toLocaleString('default', { month: 'long' });
+      searchStatsElement.textContent = `${data.searchCount} searches this month`;
+      searchStatsElement.style.display = 'block';
+    }
+  } catch (error) {
+    console.error('Error loading search stats:', error);
+  }
+}
+
 loadJSON("config.json", init);
