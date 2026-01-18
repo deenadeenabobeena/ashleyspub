@@ -1213,4 +1213,10 @@ details > summary:first-of-type {
         width: 100%;
         padding: 12px;
     }
+   .log-play-explainer {
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 10px;
+    color: var(--dark);
+}
 }
