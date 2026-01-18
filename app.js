@@ -471,7 +471,10 @@ async function logPlay(event, gameId) {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ gameId: gameId }),
+      body: JSON.stringify({ 
+        gameId: gameId,
+        gameName: button.getAttribute('data-game-name') || 'Unknown Game'
+      }),
     });
     
     if (response.ok) {
