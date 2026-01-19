@@ -43,6 +43,10 @@ export default {
 if (request.method === 'GET' && url.pathname === '/top-searches') {
   return handleGetTopSearches(env);
 }
+    // GET: Retrieve top refinements
+if (request.method === 'GET' && url.pathname === '/top-refinements') {
+  return handleGetTopRefinements(env);
+}
     // GET: Retrieve recent reports
     if (request.method === 'GET' && url.pathname === '/reports') {
       return handleGetReports(env);
@@ -528,3 +532,102 @@ async function handleGetTopSearches(env) {
     });
   }
 }
+/**
+ * Get top search refinements
+ */
+async function handleGetTopRefinements(env) {
+  try {
+    // Get the recent searches list
+    const recentSearchesData = await env.PLAY_LOGS.get('recent_searches_list');
+    
+    if (!recentSearchesData) {
+      return new Response(JSON.stringify({
+        success: true,
+        refinements: {
+          players: [],
+          weight: [],
+          playing_time: []
+        }
+      }), {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+        },
+      });
+    }
+    
+    const searches = JSON.parse(recentSearchesData);
+    
+    // Count refinements
+    const playerCounts = {};
+    const weightCounts = {};
+    const playingTimeCounts = {};
+    
+    searches.forEach(search => {
+      if (search.refinements) {
+        // Count player refinements
+        if (search.refinements.players && search.refinements.players.length > 0) {
+          search.refinements.players.forEach(player => {
+            playerCounts[player] = (playerCounts[player] || 0) + 1;
+          });
+        }
+        
+        // Count weight/complexity refinements
+        if (search.refinements.weight && search.refinements.weight.length > 0) {
+          search.refinements.weight.forEach(weight => {
+            weightCounts[weight] = (weightCounts[weight] || 0) + 1;
+          });
+        }
+        
+        // Count playing time refinements
+        if (search.refinements.playing_time && search.refinements.playing_time.length > 0) {
+          search.refinements.playing_time.forEach(time => {
+            playingTimeCounts[time] = (playingTimeCounts[time] || 0) + 1;
+          });
+        }
+      }
+    });
+    
+    // Convert to sorted arrays (top 10 each)
+    const topPlayers = Object.entries(playerCounts)
+      .map(([refinement, count]) => ({ refinement, count }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 10);
+    
+    const topWeight = Object.entries(weightCounts)
+      .map(([refinement, count]) => ({ refinement, count }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 10);
+    
+    const topPlayingTime = Object.entries(playingTimeCounts)
+      .map(([refinement, count]) => ({ refinement, count }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 10);
+    
+    return new Response(JSON.stringify({
+      success: true,
+      refinements: {
+        players: topPlayers,
+        weight: topWeight,
+        playing_time: topPlayingTime
+      }
+    }), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      },
+    });
+
+  } catch (error) {
+    console.error('Error retrieving top refinements:', error);
+    return new Response(JSON.stringify({
+      success: false,
+      refinements: {
+        players: [],
+        weight: [],
+        playing_time: []
+      }
+    }), { 
+      status: 50
