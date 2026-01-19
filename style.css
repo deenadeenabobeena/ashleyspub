@@ -227,10 +227,11 @@ details > summary:first-of-type {
 }
 
 .attribution img {
-    max-height: 24px;
+    max-height: 36px;
+   max-width: 150px;
     width: auto;
     margin-right: 20px; /* Add right margin to prevent cutoff */
-    max-width: 100px;
+    
 }
 
 .attribution-content p {
