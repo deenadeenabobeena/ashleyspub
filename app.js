@@ -371,7 +371,9 @@ function init(SETTINGS) {
         },
         resultsCount: helper.lastResults.nbHits,
       };
-      
+      // debug
+console.log('Players refinement:', helper.state.hierarchicalFacetsRefinements
+           
       // Create a unique key for this search to avoid duplicates
       const searchKey = JSON.stringify({
         q: searchState.query,
