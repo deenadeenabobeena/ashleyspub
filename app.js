@@ -392,6 +392,8 @@ function init(SETTINGS) {
         searchTimeout = setTimeout(function() {
           // Only log if this is a different search than last time
           if (searchKey !== lastLoggedSearch) {
+            console.log('Logging search state:', searchState);
+logSearch(searchState);
             logSearch(searchState);
             lastLoggedSearch = searchKey;
           }
