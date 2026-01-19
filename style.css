@@ -590,11 +590,18 @@ details > summary:first-of-type {
 }
 
 .ais-SearchBox-reset {
-    margin-left: -22px;
+    position: absolute;
+    right: 40px; /* Push it left of the magnifying glass */
+    top: calc(50% - 9px);
+    background: none;
+    border: none;
+    cursor: pointer;
 }
 
 .ais-SearchBox-resetIcon {
     fill: rgba(0, 0, 0, 0.7);
+    width: 18px;
+    height: 18px;
 }
 
 /* Sort By Component */
