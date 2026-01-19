@@ -360,7 +360,7 @@ function init(SETTINGS) {
   search.on('render', function() {
     const helper = search.helper;
     if (helper && helper.lastResults) {
-      console.log('Helper state:', helper.state);
+    
       const searchState = {
   query: helper.state.query,
   refinements: {
@@ -391,7 +391,7 @@ function init(SETTINGS) {
         searchTimeout = setTimeout(function() {
           // Only log if this is a different search than last time
           if (searchKey !== lastLoggedSearch) {
-            console.log('Logging search state:', searchState);
+            
 logSearch(searchState);
             logSearch(searchState);
             lastLoggedSearch = searchKey;
