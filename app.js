@@ -360,13 +360,14 @@ function init(SETTINGS) {
   search.on('render', function() {
     const helper = search.helper;
     if (helper && helper.lastResults) {
+      console.log('Helper state:', helper.state);
       const searchState = {
   query: helper.state.query,
   refinements: {
     categories: helper.state.disjunctiveFacetsRefinements.categories || [],
     mechanics: helper.state.disjunctiveFacetsRefinements.mechanics || [],
-    players: helper.state.hierarchicalFacets && helper.state.hierarchicalFacets['players.level1'] 
-      ? helper.state.hierarchicalFacets['players.level1'].map(item => item.name) 
+    players: (helper.state.hierarchicalFacets && helper.state.hierarchicalFacets['players.level1']) 
+      ? [helper.state.hierarchicalFacets['players.level1'][0]] 
       : [],
     weight: helper.state.disjunctiveFacetsRefinements.weight || [],
     playing_time: helper.state.disjunctiveFacetsRefinements.playing_time || [],
