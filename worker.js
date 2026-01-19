@@ -47,28 +47,202 @@ export default {
  * Log a play to KV storage
  */
 async function handleLogPlay(request, env) {
-  // ... your existing handleLogPlay code ...
+  try {
+    const { gameId, gameName } = await request.json();
+
+    // Create play record
+    const playId = `play_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    
+    const playRecord = {
+      playId,
+      gameId,
+      gameName,
+      timestamp: new Date().toISOString(),
+      date: new Date().toISOString().split('T')[0],
+    };
+
+    // Store the play
+    await env.PLAY_LOGS.put(playId, JSON.stringify(playRecord));
+
+    return new Response(JSON.stringify({ 
+      success: true,
+      message: 'Play logged successfully',
+      playId: playId,
+    }), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      },
+    });
+
+  } catch (error) {
+    console.error('Error logging play:', error);
+    return new Response(JSON.stringify({
+      success: false,
+      message: 'Failed to log play'
+    }), { 
+      status: 500,
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      },
+    });
+  }
 }
 
 /**
  * Get recent plays from KV storage
  */
 async function handleGetPlays(env) {
-  // ... your existing handleGetPlays code ...
+  try {
+    // List all keys that start with "play_"
+    const list = await env.PLAY_LOGS.list({ prefix: 'play_' });
+    
+    // Fetch all play records
+    const plays = await Promise.all(
+      list.keys.map(async (key) => {
+        const data = await env.PLAY_LOGS.get(key.name);
+        return data ? JSON.parse(data) : null;
+      })
+    );
+
+    // Filter out any null values and sort by timestamp (newest first)
+    const validPlays = plays
+      .filter(play => play !== null)
+      .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+    return new Response(JSON.stringify({
+      success: true,
+      plays: validPlays,
+      count: validPlays.length,
+    }), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      },
+    });
+
+  } catch (error) {
+    console.error('Error retrieving plays:', error);
+    return new Response(JSON.stringify({
+      success: false,
+      plays: [],
+      count: 0,
+    }), { 
+      status: 500,
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      },
+    });
+  }
 }
 
 /**
  * Report an issue with a game
  */
 async function handleReportIssue(request, env) {
-  // ... your existing handleReportIssue code ...
+  try {
+    const { 
+      gameId, 
+      gameName, 
+      issueType,
+      issueDetails 
+    } = await request.json();
+
+    // Create report record
+    const reportId = `report_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    
+    const reportRecord = {
+      reportId,
+      gameId,
+      gameName,
+      issueType,
+      issueDetails: issueDetails || '',
+      timestamp: new Date().toISOString(),
+      date: new Date().toISOString().split('T')[0],
+      status: 'pending',
+    };
+
+    // Store the report
+    await env.PLAY_LOGS.put(reportId, JSON.stringify(reportRecord));
+
+    return new Response(JSON.stringify({ 
+      success: true,
+      message: 'Report submitted successfully',
+      reportId: reportId,
+    }), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      },
+    });
+
+  } catch (error) {
+    console.error('Error reporting issue:', error);
+    return new Response(JSON.stringify({
+      success: false,
+      message: 'Failed to submit report'
+    }), { 
+      status: 500,
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      },
+    });
+  }
 }
 
 /**
  * Get recent reports from KV storage
  */
 async function handleGetReports(env) {
-  // ... your existing handleGetReports code ...
+  try {
+    // List all keys that start with "report_"
+    const list = await env.PLAY_LOGS.list({ prefix: 'report_' });
+    
+    // Fetch all report records
+    const reports = await Promise.all(
+      list.keys.map(async (key) => {
+        const data = await env.PLAY_LOGS.get(key.name);
+        return data ? JSON.parse(data) : null;
+      })
+    );
+
+    // Filter out any null values and sort by timestamp (newest first)
+    const validReports = reports
+      .filter(report => report !== null)
+      .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+    return new Response(JSON.stringify({
+      success: true,
+      reports: validReports,
+      count: validReports.length,
+    }), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      },
+    });
+
+  } catch (error) {
+    console.error('Error retrieving reports:', error);
+    return new Response(JSON.stringify({
+      success: false,
+      reports: [],
+      count: 0,
+    }), { 
+      status: 500,
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      },
+    });
+  }
 }
 
 /**
