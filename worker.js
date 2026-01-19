@@ -9,7 +9,7 @@ export default {
       return new Response(null, {
         headers: {
           'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
+          'Access-Control-Allow-Methods': 'POST, GET, PATCH, OPTIONS',
           'Access-Control-Allow-Headers': 'Content-Type',
         },
       });
@@ -22,6 +22,10 @@ export default {
     // POST: Report an issue
     if (request.method === 'POST' && url.pathname === '/report') {
       return handleReportIssue(request, env);
+    }
+    // PATCH: Update report status
+    if (request.method === 'PATCH' && url.pathname === '/report') {
+      return handleUpdateReportStatus(request, env);
     }
     // POST: Log a search
     if (request.method === 'POST' && url.pathname === '/search') {
@@ -235,6 +239,78 @@ async function handleGetReports(env) {
       success: false,
       reports: [],
       count: 0,
+    }), { 
+      status: 500,
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      },
+    });
+  }
+}
+
+/**
+ * Update a report's status
+ */
+async function handleUpdateReportStatus(request, env) {
+  try {
+    const { reportId, status } = await request.json();
+    
+    // Valid statuses
+    const validStatuses = ['pending', 'reviewed', 'fixed'];
+    if (!validStatuses.includes(status)) {
+      return new Response(JSON.stringify({
+        success: false,
+        message: 'Invalid status'
+      }), { 
+        status: 400,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+        },
+      });
+    }
+    
+    // Get the existing report
+    const reportData = await env.PLAY_LOGS.get(reportId);
+    if (!reportData) {
+      return new Response(JSON.stringify({
+        success: false,
+        message: 'Report not found'
+      }), { 
+        status: 404,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+        },
+      });
+    }
+    
+    // Update the status
+    const report = JSON.parse(reportData);
+    report.status = status;
+    report.updatedAt = new Date().toISOString();
+    
+    // Save back to KV
+    await env.PLAY_LOGS.put(reportId, JSON.stringify(report));
+    
+    return new Response(JSON.stringify({ 
+      success: true,
+      message: 'Report status updated',
+      report: report,
+    }), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      },
+    });
+    
+  } catch (error) {
+    console.error('Error updating report status:', error);
+    return new Response(JSON.stringify({
+      success: false,
+      message: 'Failed to update report status'
     }), { 
       status: 500,
       headers: {
