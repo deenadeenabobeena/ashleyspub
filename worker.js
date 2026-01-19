@@ -39,6 +39,10 @@ export default {
     if (request.method === 'GET' && url.pathname === '/plays') {
       return handleGetPlays(env);
     }
+    // GET: Retrieve top searches
+if (request.method === 'GET' && url.pathname === '/top-searches') {
+  return handleGetTopSearches(env);
+}
     // GET: Retrieve recent reports
     if (request.method === 'GET' && url.pathname === '/reports') {
       return handleGetReports(env);
@@ -449,6 +453,72 @@ async function handleGetSearchStats(env) {
     return new Response(JSON.stringify({
       currentMonth: new Date().toISOString().substring(0, 7),
       searchCount: 0,
+    }), { 
+      status: 500,
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      },
+    });
+  }
+}
+/**
+ * Get top search terms
+ */
+async function handleGetTopSearches(env) {
+  try {
+    // Get the recent searches list
+    const recentSearchesData = await env.PLAY_LOGS.get('recent_searches_list');
+    
+    if (!recentSearchesData) {
+      return new Response(JSON.stringify({
+        success: true,
+        topSearches: [],
+        count: 0,
+      }), {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+        },
+      });
+    }
+    
+    const searches = JSON.parse(recentSearchesData);
+    
+    // Count search queries (ignore empty queries)
+    const queryCounts = {};
+    searches.forEach(search => {
+      const query = search.query.trim().toLowerCase();
+      if (query.length >= 3) { // Only count searches with 3+ characters
+        queryCounts[query] = (queryCounts[query] || 0) + 1;
+      }
+    });
+    
+    // Convert to array and sort by count
+    const topSearches = Object.entries(queryCounts)
+      .map(([query, count]) => ({ query, count }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 10); // Top 10
+    
+    return new Response(JSON.stringify({
+      success: true,
+      topSearches: topSearches,
+      count: topSearches.length,
+    }), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      },
+    });
+
+  } catch (error) {
+    console.error('Error retrieving top searches:', error);
+    return new Response(JSON.stringify({
+      success: false,
+      topSearches: [],
+      count: 0,
     }), { 
       status: 500,
       headers: {
