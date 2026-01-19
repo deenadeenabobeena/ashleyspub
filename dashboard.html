@@ -168,36 +168,45 @@
     }
     
     // Mark a report as fixed
-    async function markAsFixed(reportId) {
-      if (!confirm('Mark this report as fixed?')) {
-        return;
-      }
-      
-      try {
-        const response = await fetch('https://ashleyspub-log-play.db-chan.workers.dev/report', {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            reportId: reportId,
-            status: 'fixed'
-          }),
-        });
-        
-        const data = await response.json();
-        
-        if (data.success) {
-          // Reload reports to show updated status
-          loadReports();
-        } else {
-          alert('Failed to update report: ' + data.message);
-        }
-      } catch (error) {
-        console.error('Error updating report:', error);
-        alert('Failed to update report. Please try again.');
-      }
+async function markAsFixed(reportId) {
+  // Prompt for password, just enough to stop a drunk from pushing buttons they shouldn't
+  const password = prompt('Enter staff password to mark as fixed:');
+  
+  // Check password (you can change 'ashleyspub' to whatever you want)
+  if (password !== 'ashleyspub') {
+    alert('Incorrect password');
+    return;
+  }
+  
+  if (!confirm('Mark this report as fixed?')) {
+    return;
+  }
+  
+  try {
+    const response = await fetch('https://ashleyspub-log-play.db-chan.workers.dev/report', {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        reportId: reportId,
+        status: 'fixed'
+      }),
+    });
+    
+    const data = await response.json();
+    
+    if (data.success) {
+      // Reload reports to show updated status
+      loadReports();
+    } else {
+      alert('Failed to update report: ' + data.message);
     }
+  } catch (error) {
+    console.error('Error updating report:', error);
+    alert('Failed to update report. Please try again.');
+  }
+}
     
     // Fetch and display plays
     async function loadPlays() {
