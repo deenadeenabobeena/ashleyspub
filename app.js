@@ -361,16 +361,18 @@ function init(SETTINGS) {
     const helper = search.helper;
     if (helper && helper.lastResults) {
       const searchState = {
-        query: helper.state.query,
-        refinements: {
-          categories: helper.state.disjunctiveFacetsRefinements.categories || [],
-          mechanics: helper.state.disjunctiveFacetsRefinements.mechanics || [],
-          players: helper.state.hierarchicalFacetsRefinements.players || [],
-          weight: helper.state.disjunctiveFacetsRefinements.weight || [],
-          playing_time: helper.state.disjunctiveFacetsRefinements.playing_time || [],
-        },
-        resultsCount: helper.lastResults.nbHits,
-      };
+  query: helper.state.query,
+  refinements: {
+    categories: helper.state.disjunctiveFacetsRefinements.categories || [],
+    mechanics: helper.state.disjunctiveFacetsRefinements.mechanics || [],
+    players: helper.state.hierarchicalFacets && helper.state.hierarchicalFacets['players.level1'] 
+      ? helper.state.hierarchicalFacets['players.level1'].map(item => item.name) 
+      : [],
+    weight: helper.state.disjunctiveFacetsRefinements.weight || [],
+    playing_time: helper.state.disjunctiveFacetsRefinements.playing_time || [],
+  },
+  resultsCount: helper.lastResults.nbHits,
+};
            
       // Create a unique key for this search to avoid duplicates
       const searchKey = JSON.stringify({
