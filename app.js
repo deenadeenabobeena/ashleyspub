@@ -366,9 +366,7 @@ function init(SETTINGS) {
   refinements: {
     categories: helper.state.disjunctiveFacetsRefinements.categories || [],
     mechanics: helper.state.disjunctiveFacetsRefinements.mechanics || [],
-    players: (helper.state.hierarchicalFacets && helper.state.hierarchicalFacets['players.level1']) 
-      ? [helper.state.hierarchicalFacets['players.level1'][0]] 
-      : [],
+    players: helper.state.hierarchicalFacetsRefinements['players.level1'] || [],
     weight: helper.state.disjunctiveFacetsRefinements.weight || [],
     playing_time: helper.state.disjunctiveFacetsRefinements.playing_time || [],
   },
