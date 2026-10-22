@@ -1287,7 +1287,7 @@ details > summary:first-of-type {
    SHELF LOCATION (card line)
    ============================================= */
 .shelf-location {
-    margin: 15px 0 0;
+    margin: 28px 0 0;
     padding: 8px 12px;
     border-left: 4px solid var(--hl);
     background: rgba(0, 0, 0, 0.05);
