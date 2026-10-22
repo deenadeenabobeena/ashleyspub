@@ -33,6 +33,7 @@ class Indexer:
                 'min_age',
                 'searchable(previous_players)',
                 'numplays',
+                'shelf',
             ],
             'customRanking': ['asc(name)'],
             'highlightPreTag': '<strong class="highlight">',
@@ -164,7 +165,8 @@ class Indexer:
 
         return None
 
-    def add_objects(self, collection):
+    def add_objects(self, collection, shelves=None):
+        # shelves: optional {bgg_id (str): shelf label} from the staff spreadsheet
         games = [Indexer.todict(game) for game in collection]
         for i, game in enumerate(games):
             if i != 0 and i % 25 == 0:
@@ -199,6 +201,12 @@ class Indexer:
                     game["color"] = f"{color_r}, {color_g}, {color_b}"
 
             game["objectID"] = f"bgg{game['id']}"
+
+            # Shelf location from the staff spreadsheet (games without one get no field)
+            if shelves:
+                shelf = shelves.get(str(game["id"]))
+                if shelf:
+                    game["shelf"] = shelf
 
             # Turn players tuple into a hierarchical facet
             game["players"] = [

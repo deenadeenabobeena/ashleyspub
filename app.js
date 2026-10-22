@@ -155,6 +155,16 @@ function get_widgets(SETTINGS) {
         showMore: true,
       }
     ),
+    "refine_shelf": panel('Shelf')(instantsearch.widgets.refinementList)(
+      {
+        container: '#facet-shelf',
+        collapsible: true,
+        attribute: 'shelf',
+        operator: 'or',
+        limit: 20,
+        sortBy: ['name:asc'],
+      }
+    ),
     "refine_players": panel('Number of players')(instantsearch.widgets.hierarchicalMenu)(
       {
         container: '#facet-players',
@@ -224,6 +234,7 @@ function get_widgets(SETTINGS) {
       container: '#hits',
       transformItems: function(items) {
         hide_facet_when_no_data('#facet-previous-players', items, 'previous_players');
+        hide_facet_when_no_data('#facet-shelf', items, 'shelf');
         
 
         return items.map(function(game){
@@ -433,6 +444,7 @@ logSearch(searchState);
     widgets["search"],
     widgets["sort"],
     widgets["clear"],
+    widgets["refine_shelf"],
     widgets["refine_categories"],
     widgets["refine_mechanics"],
     widgets["refine_players"],

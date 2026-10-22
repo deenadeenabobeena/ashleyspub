@@ -14,6 +14,25 @@
         "api_key_search_only": "61b77b17ee869a9e23ca2f7e7adadb53",
         "index_name": "PubGames",
         "hits_per_page": 24
+    },
+    "shelves": {
+        "csv_url": "https://docs.google.com/spreadsheets/d/e/2PACX-1vRTBr6fi_Z6I29tyLzSEX1PgB3VJBsXVTwmkEiIDfs6IGzjIObyXRBi_NnRVYUs3UzX5S367KWstEkW/pub?output=csv",
+        "labels": [
+            "war",
+            "build",
+            "fight",
+            "farm",
+            "adv/exp",
+            "trivia",
+            "party",
+            "small party",
+            "co-op",
+            "solo",
+            "classics",
+            "duo",
+            "oversize",
+            "behind the bar"
+        ]
     }
   }
 

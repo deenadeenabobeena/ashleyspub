@@ -28,6 +28,7 @@
   
    <article class="wrapper">
      <aside class="facets">
+       <div class="facet" id="facet-shelf" tabindex="0"></div>
        <div class="facet" id="facet-players" tabindex="0"></div>
        <div class="facet" id="facet-playing-time" tabindex="0"></div>
        <div class="facet" id="facet-weight" tabindex="0"></div>
@@ -59,6 +60,9 @@
              {{# helpers.highlight }}{ "attribute": "name" }{{/ helpers.highlight }}
            </a>
          </h2>
+         {{# shelf }}
+         <p class="shelf-location"><span>Find it on the shelf:</span> <strong>{{ shelf }}</strong></p>
+         {{/ shelf }}
          <dl class="properties-header">
            <div>
              <img src="images/ico-players.svg" title="Supported players">
@@ -159,7 +163,15 @@
     <img src="images/Algolia-logo-white.png" alt="Powered by Algolia" />
     <img src="images/bgg.png" alt="Powered by BGG" />
   </div>
-  
+
+  <!--
+    RESERVED: tribute to Brandon.
+    This is the credits corner of the site, next to "Powered by Algolia" and
+    "Powered by BGG", and anyone who views the page source will find this note.
+    When the wording is ready, replace this comment with the tribute (a small
+    line of text or a link), or leave it hidden here for people to find.
+  -->
+
   <a href="dashboard.html" class="stats-link">Stats</a>
 </div>
 </footer>

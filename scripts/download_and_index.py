@@ -3,6 +3,7 @@ import json
 
 from mybgg.downloader import Downloader
 from mybgg.indexer import Indexer
+from mybgg.shelves import load_shelves
 from setup_logging import setup_logging
 
 def main(args):
@@ -25,6 +26,19 @@ def main(args):
     if not len(collection):
         assert False, "No games imported, is the boardgamegeek part of config.json correctly set?"
 
+    # Shelf labels from the staff spreadsheet (optional: skipped when no csv_url is set)
+    shelves = None
+    shelf_settings = SETTINGS.get("shelves", {})
+    if shelf_settings.get("csv_url"):
+        shelves = load_shelves(shelf_settings["csv_url"], shelf_settings.get("labels"))
+        collection_ids = {str(game.id) for game in collection}
+        with_shelf = len(collection_ids & set(shelves))
+        not_in_collection = len(set(shelves) - collection_ids)
+        print(f"Read {len(shelves)} shelf labels; {with_shelf} games have a shelf, "
+              f"{len(collection_ids) - with_shelf} do not.")
+        if not_in_collection:
+            print(f"Note: {not_in_collection} sheet rows are not in the collection and were ignored.")
+
     if not args.no_indexing:
         hits_per_page = SETTINGS["algolia"].get("hits_per_page", 48)
         indexer = Indexer(
@@ -33,7 +47,7 @@ def main(args):
             index_name=SETTINGS["algolia"]["index_name"],
             hits_per_page=hits_per_page,
         )
-        indexer.add_objects(collection)
+        indexer.add_objects(collection, shelves=shelves)
         indexer.delete_objects_not_in(collection)
 
         print(f"Indexed {num_games} games and {num_expansions} expansions in algolia, and removed everything else.")
