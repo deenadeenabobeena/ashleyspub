@@ -164,10 +164,23 @@ class Indexer:
             return response.content
 
         return None
-
+        
+    def _existing_added_dates(self):
+        # {objectID: addedAt} for every game already in the index.
+        # addedAt is None if the game has never been stamped.
+        existing = {}
+        for hit in self.index.browse_objects({'attributesToRetrieve': ['addedAt']}):
+            existing[hit['objectID']] = hit.get('addedAt')
+        return existing
+        
     def add_objects(self, collection, shelves=None):
         # shelves: optional {bgg_id (str): shelf label} from the staff spreadsheet
         games = [Indexer.todict(game) for game in collection]
+        existing_dates = self._existing_added_dates()
+        # First run ever: nothing has a date yet, so mark every current game as "already here" (0)
+        first_run = all(value is None for value in existing_dates.values())
+        now = int(time.time())
+        new_game_count = 0
         for i, game in enumerate(games):
             if i != 0 and i % 25 == 0:
                 print(f"Indexed {i} of {len(games)} games...")
@@ -201,6 +214,13 @@ class Indexer:
                     game["color"] = f"{color_r}, {color_g}, {color_b}"
 
             game["objectID"] = f"bgg{game['id']}"
+            # Date the game first appeared in the index (kept from earlier runs)
+            added_at = existing_dates.get(game["objectID"])
+            if added_at is None:
+                added_at = 0 if first_run else now
+                if added_at:
+                    new_game_count += 1
+            game["addedAt"] = added_at
 
             # Shelf location from the staff spreadsheet (games without one get no field)
             if shelves:
@@ -233,7 +253,11 @@ class Indexer:
 
             # Make sure description is not too long
             game["description"] = self._prepare_description(game["description"])
-
+        if first_run:
+            print("First run: marked all current games as already on the shelf (addedAt = 0).")
+        else:
+            print(f"{new_game_count} new games stamped as added today.")
+            
         self.index.save_objects(games)
 
     def delete_objects_not_in(self, collection):
