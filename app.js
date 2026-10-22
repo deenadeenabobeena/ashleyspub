@@ -262,6 +262,7 @@ function get_widgets(SETTINGS) {
           game.description = game.description.trim();
           game.has_expansions = (game.expansions.length > 0);
           game.has_more_expansions = (game.has_more_expansions);
+          game.is_new = (game.addedAt > new_game_cutoff());
 
           if (game.has_more_expansions) {
             game_prefix = game.name.indexOf(":")? game.name.substring(0, game.name.indexOf(":")) : game.name;
@@ -362,6 +363,8 @@ function init(SETTINGS) {
     routing: true
   });
 
+  pub_search = search;
+
   search.on('render', on_render);
 
  // Track searches after each render (with debouncing)
@@ -403,8 +406,7 @@ function init(SETTINGS) {
           // Only log if this is a different search than last time
           if (searchKey !== lastLoggedSearch) {
             
-
-            logSearch(searchState);
+logSearch(searchState);
             lastLoggedSearch = searchKey;
           }
         }, 3000); // 3 second delay
@@ -460,6 +462,7 @@ function init(SETTINGS) {
   ]);
 
   search.start();
+  load_new_games(SETTINGS);
 
   function set_bgg_name() {
     var title = SETTINGS.project.title;
@@ -672,6 +675,125 @@ async function loadSearchStats() {
   } catch (error) {
     console.error('Error loading search stats:', error);
   }
+}
+
+// Games added after this moment count as "new": 30 days ago, rounded to midnight UTC
+function new_game_cutoff() {
+  const day = 86400;
+  return Math.floor(Date.now() / 1000 / day) * day - 30 * day;
+}
+
+/**
+ * "New" button + popup: games added in the last 30 days, newest first
+ */
+function load_new_games(SETTINGS) {
+  const button = document.getElementById('new-games-button');
+  const popup = document.getElementById('new-games-popup');
+  const list = document.getElementById('new-games-list');
+  if (!button || !popup || !list) return;
+
+  const cutoff = new_game_cutoff();
+
+  const client = algoliasearch(SETTINGS.algolia.app_id, SETTINGS.algolia.api_key_search_only);
+  const index = client.initIndex(SETTINGS.algolia.index_name);
+
+  function open_popup() {
+    popup.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+  function close_popup() {
+    popup.style.display = 'none';
+    document.body.style.overflow = 'auto';
+  }
+
+  button.addEventListener('click', open_popup);
+  popup.querySelector('.close').addEventListener('click', close_popup);
+  popup.addEventListener('click', function(event) {
+    if (event.target === popup) close_popup();
+  });
+  document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape' && popup.style.display === 'flex') close_popup();
+  });
+
+  index.search('', {
+    filters: 'addedAt > ' + cutoff,
+    hitsPerPage: 100,
+    attributesToRetrieve: ['name', 'image', 'id', 'addedAt'],
+  }).then(function(res) {
+    if (!res.hits.length) return;
+
+    // Newest first
+    const games = res.hits.sort(function(a, b) { return b.addedAt - a.addedAt; });
+
+    games.forEach(function(game) {
+      const row = document.createElement('button');
+      row.type = 'button';
+      row.className = 'new-game-row';
+
+      const img = document.createElement('img');
+      img.src = game.image;
+      img.alt = '';
+      row.appendChild(img);
+
+      const text = document.createElement('span');
+      const name = document.createElement('strong');
+      name.textContent = game.name;
+      const added = document.createElement('small');
+      added.textContent = 'Added ' + new Date(game.addedAt * 1000).toLocaleDateString(
+        undefined, { month: 'short', day: 'numeric' }
+      );
+      text.appendChild(name);
+      text.appendChild(added);
+      row.appendChild(text);
+
+      row.addEventListener('click', function() {
+        close_popup();
+        search_for_game(game.name, game.id);
+      });
+      list.appendChild(row);
+    });
+
+    button.textContent = '✨ New (' + res.nbHits + ')';
+    button.hidden = false;
+  }).catch(function(error) {
+    console.error('Could not load new games:', error);
+  });
+}
+
+// The running search (set in init) so other functions can check its results
+let pub_search = null;
+
+// Fill the search box with a game's name, run the search, then open that game's card
+function search_for_game(name, id) {
+  const box = document.querySelector('.ais-SearchBox-input');
+  if (!box) return;
+  box.value = name;
+  box.dispatchEvent(new Event('input', { bubbles: true }));
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (id) open_game_card(name, id);
+}
+
+// Wait for the results of this search to appear, then open the card with this game's ID.
+// Finds the card by ID (not position), so it works wherever the game lands in the results.
+function open_game_card(name, id) {
+  let tries = 0;
+  const timer = setInterval(function() {
+    tries++;
+    const results = pub_search && pub_search.helper && pub_search.helper.lastResults;
+    if (results && results.query === name) {
+      const button = document.querySelector('.log-play-btn[data-game-id="' + id + '"]');
+      if (button) {
+        clearInterval(timer);
+        const card = button.closest('details');
+        if (card) {
+          card.setAttribute('open', '');
+          card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        return;
+      }
+    }
+    if (tries > 30) clearInterval(timer);  // give up after about 4.5 seconds
+  }, 150);
 }
 
 loadJSON("config.json", init);

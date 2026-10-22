@@ -22,6 +22,7 @@
   <div class="sort-section">
   <div id="search-stats" class="search-stats" style="display: none;"></div>
   <div id="game-counter" class="game-counter"></div>
+    <button id="new-games-button" class="new-games-btn" type="button" hidden>✨ New</button>
   <label for="sort-by">Sort by:</label>
   <div class="sort-by" id="sort-by"></div>
 </div>
@@ -48,8 +49,11 @@
    <script type="text/html" id="hits-template">
      <details class="game-wrapper">
        <summary>
-         <div class="game">
-           <img src="{{{ image }}}" alt="{{{ name }}}">
+                  <div class="game">
+           <span class="game-img">
+             <img src="{{{ image }}}" alt="{{{ name }}}">
+             {{# is_new }}<span class="new-tag">✨ NEW</span>{{/ is_new }}
+           </span>
          </div>
          <div class="gamename">{{{ name }}}</div>
        </summary>
@@ -148,7 +152,14 @@
    </div>
  </div>
 
- 
+    <div id="new-games-popup" class="new-games-popup">
+     <div class="new-games-content">
+       <div class="close">×</div>
+       <h2>✨ New on the shelf</h2>
+       <p class="new-games-note">Added in the last 30 days. Click a game to find it.</p>
+       <div id="new-games-list" class="new-games-list"></div>
+     </div>
+   </div>
   
    <script src="app.js"></script>
    <script src="scripts/random-game.js"></script>

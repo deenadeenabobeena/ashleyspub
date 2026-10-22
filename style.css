@@ -1307,3 +1307,81 @@ details > summary:first-of-type {
 .shelf-location strong {
     font-weight: 700;
 }
+/* New games button + popup */
+.new-games-btn {
+  background-color: var(--main);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 10px;
+  margin-right: 20px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: background-color 0.2s;
+}
+.new-games-btn:hover { background-color: var(--hl); }
+.new-games-btn[hidden] { display: none; }
+
+.new-games-popup {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+}
+.new-games-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  padding: 25px;
+  border-radius: 8px;
+  max-width: 460px;
+  width: 90%;
+  max-height: 80vh;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+.new-games-content h2 { margin: 0 0 6px; color: #333; }
+.new-games-note { margin: 0 0 14px; color: #666; font-size: 13px; }
+.new-games-list { overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+.new-game-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 6px 10px 6px 6px;
+  border: 0;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--dark);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.new-game-row:hover { background: rgba(0, 153, 204, 0.15); }
+.new-game-row img { width: 48px; height: 48px; object-fit: cover; border-radius: 4px; flex-shrink: 0; }
+.new-game-row strong { display: block; font-weight: 700; }
+.new-game-row small { display: block; margin-top: 3px; color: #666; font-size: 12px; }
+
+/* NEW tag on game tiles */
+.game-img { position: relative; display: inline-flex; }
+.new-tag {
+  position: absolute;
+  top: -6px;
+  left: -6px;
+  padding: 2px 7px;
+  background: var(--hl);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
