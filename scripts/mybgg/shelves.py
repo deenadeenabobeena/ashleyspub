@@ -60,3 +60,47 @@ def load_shelves(csv_url, allowed_labels=None):
         )
 
     return shelves
+
+
+MAX_PICK_NOTE_LENGTH = 100
+
+
+def load_picks(csv_url):
+    """Download the published spreadsheet and return {bgg_id: {"by": name, "note": text}}.
+
+    Uses the optional column "recc" (a bartender's name; "Picked by" also
+    works) and the optional column "Pick note". A game is a staff pick when
+    "recc" has a name; a note is not required. Long notes are shortened so
+    they fit on the game card. If the "recc" column is missing, this prints a
+    note and returns no picks, so a sheet without the column never stops the
+    shelf labels from updating.
+    """
+    response = requests.get(csv_url, timeout=30)
+    response.raise_for_status()
+
+    text = response.content.decode("utf-8-sig")
+    reader = csv.DictReader(io.StringIO(text))
+
+    id_column = _find_column(reader.fieldnames, "bgg id")
+    # The picker's name column is called "recc" in the sheet ("Picked by" also works)
+    by_column = (_find_column(reader.fieldnames, "recc")
+                 or _find_column(reader.fieldnames, "picked by"))
+    note_column = _find_column(reader.fieldnames, "pick note")
+    if not id_column or not by_column:
+        print("Note: no 'recc' column in the spreadsheet, so there are no staff picks.")
+        return {}
+
+    picks = {}
+    for row in reader:
+        game_id = (row.get(id_column) or "").strip()
+        picked_by = (row.get(by_column) or "").strip()
+        if not game_id or not picked_by:
+            continue
+        note = (row.get(note_column) or "").strip() if note_column else ""
+        if len(note) > MAX_PICK_NOTE_LENGTH:
+            print(f"Warning: the pick note for game {game_id} is over "
+                  f"{MAX_PICK_NOTE_LENGTH} characters and was shortened.")
+            note = note[:MAX_PICK_NOTE_LENGTH - 1].rstrip() + "\u2026"
+        picks[game_id] = {"by": picked_by, "note": note}
+
+    return picks

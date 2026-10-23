@@ -60,7 +60,15 @@
        <div class="game-details">
          <div class="game-details-wrapper">
          <div class="game-top">
-           <img class="card-image" src="{{{ image }}}" alt="">
+           <div class="card-side">
+             <img class="card-image" src="{{{ image }}}" alt="">
+             {{# pick_by }}
+             <div class="staff-pick">
+               <span class="staff-pick-name">★ {{ pick_by }}'s pick</span>
+               {{# pick_note }}<span class="staff-pick-note">{{ pick_note }}</span>{{/ pick_note }}
+             </div>
+             {{/ pick_by }}
+           </div>
            <div class="game-top-text">
          <h2 class="heading">
            <a href="https://boardgamegeek.com/boardgame/{{{ id }}}">

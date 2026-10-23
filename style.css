@@ -1388,8 +1388,10 @@ details > summary:first-of-type {
 
 /* Box image on the expanded card */
 .game-top { display: flex; gap: 20px; align-items: flex-start; margin-bottom: 20px;}
+.card-side { width: 150px; flex-shrink: 0; }
 .card-image {
-  width: 150px;
+  display: block;
+  width: 100%;
   max-height: 210px;
   object-fit: contain;
   flex-shrink: 0;
@@ -1400,5 +1402,26 @@ details > summary:first-of-type {
 .game-top-text .properties-header { gap: 20px; flex-wrap: wrap; }
 @media (max-width: 480px) {
   .game-top { flex-direction: column; align-items: center; }
-  .card-image { width: 130px; }
+  .card-side { width: 130px; }
+}
+
+/* Staff pick under the box image */
+.staff-pick { margin-top: 10px; text-align: center; }
+.staff-pick-name {
+  display: block;
+  padding: 5px 8px;
+  border-radius: 4px;
+  background: var(--main);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 15px;
+}
+.staff-pick-note {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+  line-height: 16px;
+  font-style: italic;
+  color: var(--dark);
 }

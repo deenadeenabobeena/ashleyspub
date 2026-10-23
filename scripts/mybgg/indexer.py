@@ -34,6 +34,7 @@ class Indexer:
                 'searchable(previous_players)',
                 'numplays',
                 'shelf',
+                'pick_by',
             ],
             'customRanking': ['asc(name)'],
             'highlightPreTag': '<strong class="highlight">',
@@ -173,8 +174,9 @@ class Indexer:
             existing[hit['objectID']] = hit.get('addedAt')
         return existing
         
-    def add_objects(self, collection, shelves=None):
+    def add_objects(self, collection, shelves=None, picks=None):
         # shelves: optional {bgg_id (str): shelf label} from the staff spreadsheet
+        # picks: optional {bgg_id (str): {"by": name, "note": text}} from the same spreadsheet
         games = [Indexer.todict(game) for game in collection]
         existing_dates = self._existing_added_dates()
         # First run ever: nothing has a date yet, so mark every current game as "already here" (0)
@@ -227,6 +229,14 @@ class Indexer:
                 shelf = shelves.get(str(game["id"]))
                 if shelf:
                     game["shelf"] = shelf
+
+            # Staff pick from the spreadsheet (games without one get no fields)
+            if picks:
+                pick = picks.get(str(game["id"]))
+                if pick:
+                    game["pick_by"] = pick["by"]
+                    if pick["note"]:
+                        game["pick_note"] = pick["note"]
 
             # Turn players tuple into a hierarchical facet
             game["players"] = [

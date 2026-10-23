@@ -3,7 +3,7 @@ import json
 
 from mybgg.downloader import Downloader
 from mybgg.indexer import Indexer
-from mybgg.shelves import load_shelves
+from mybgg.shelves import load_picks, load_shelves
 from setup_logging import setup_logging
 
 def main(args):
@@ -28,6 +28,7 @@ def main(args):
 
     # Shelf labels from the staff spreadsheet (optional: skipped when no csv_url is set)
     shelves = None
+    picks = None
     shelf_settings = SETTINGS.get("shelves", {})
     if shelf_settings.get("csv_url"):
         shelves = load_shelves(shelf_settings["csv_url"], shelf_settings.get("labels"))
@@ -39,6 +40,11 @@ def main(args):
         if not_in_collection:
             print(f"Note: {not_in_collection} sheet rows are not in the collection and were ignored.")
 
+        # Staff picks from the same spreadsheet (optional columns)
+        picks = load_picks(shelf_settings["csv_url"])
+        picks_in_collection = len(collection_ids & set(picks))
+        print(f"Read {len(picks)} staff picks; {picks_in_collection} are in the collection.")
+
     if not args.no_indexing:
         hits_per_page = SETTINGS["algolia"].get("hits_per_page", 48)
         indexer = Indexer(
@@ -47,7 +53,7 @@ def main(args):
             index_name=SETTINGS["algolia"]["index_name"],
             hits_per_page=hits_per_page,
         )
-        indexer.add_objects(collection, shelves=shelves)
+        indexer.add_objects(collection, shelves=shelves, picks=picks)
         indexer.delete_objects_not_in(collection)
 
         print(f"Indexed {num_games} games and {num_expansions} expansions in algolia, and removed everything else.")
