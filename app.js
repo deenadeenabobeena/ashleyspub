@@ -330,7 +330,8 @@ function get_widgets(SETTINGS) {
     // NEW WIDGET: Game Counter
     "gameCounter": {
       render({ instantSearchInstance }) {
-        const gameCount = instantSearchInstance.helper.lastResults?.nbHits || 0;
+        const lastResults = instantSearchInstance.helper.lastResults;
+        const gameCount = (lastResults && lastResults.nbHits) || 0;
         const counterElement = document.getElementById('game-counter');
         if (counterElement) {
           counterElement.textContent = `${gameCount} Games`;
