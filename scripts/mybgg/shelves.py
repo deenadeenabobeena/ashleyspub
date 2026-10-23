@@ -104,3 +104,41 @@ def load_picks(csv_url):
         picks[game_id] = {"by": picked_by, "note": note}
 
     return picks
+
+
+def load_seasons(csv_url):
+    """Download the published spreadsheet and return {bgg_id: [season, ...]}.
+
+    Uses the optional column "seasonal" (or "season"). Put one or more seasons
+    in it, separated by commas, like "halloween" or "halloween, winter". Names
+    are lower-cased so "Halloween" and "halloween" count as the same season.
+    If the column is missing, this prints a note and returns no seasons, so a
+    sheet without the column never stops the shelf labels from updating.
+    """
+    response = requests.get(csv_url, timeout=30)
+    response.raise_for_status()
+
+    text = response.content.decode("utf-8-sig")
+    reader = csv.DictReader(io.StringIO(text))
+
+    id_column = _find_column(reader.fieldnames, "bgg id")
+    season_column = (_find_column(reader.fieldnames, "seasonal")
+                     or _find_column(reader.fieldnames, "season"))
+    if not id_column or not season_column:
+        print("Note: no 'seasonal' column in the spreadsheet, so there are no seasonal tags.")
+        return {}
+
+    seasons = {}
+    for row in reader:
+        game_id = (row.get(id_column) or "").strip()
+        if not game_id:
+            continue
+        names = []
+        for name in (row.get(season_column) or "").split(","):
+            name = name.strip().lower()
+            if name and name not in names:
+                names.append(name)
+        if names:
+            seasons[game_id] = names
+
+    return seasons

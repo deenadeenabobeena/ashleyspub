@@ -3,7 +3,7 @@ import json
 
 from mybgg.downloader import Downloader
 from mybgg.indexer import Indexer
-from mybgg.shelves import load_picks, load_shelves
+from mybgg.shelves import load_picks, load_seasons, load_shelves
 from setup_logging import setup_logging
 
 def main(args):
@@ -29,6 +29,7 @@ def main(args):
     # Shelf labels from the staff spreadsheet (optional: skipped when no csv_url is set)
     shelves = None
     picks = None
+    seasons = None
     shelf_settings = SETTINGS.get("shelves", {})
     if shelf_settings.get("csv_url"):
         shelves = load_shelves(shelf_settings["csv_url"], shelf_settings.get("labels"))
@@ -45,6 +46,11 @@ def main(args):
         picks_in_collection = len(collection_ids & set(picks))
         print(f"Read {len(picks)} staff picks; {picks_in_collection} are in the collection.")
 
+        # Seasonal tags from the same spreadsheet (optional column)
+        seasons = load_seasons(shelf_settings["csv_url"])
+        seasonal_in_collection = len(collection_ids & set(seasons))
+        print(f"Read {len(seasons)} seasonal tags; {seasonal_in_collection} are in the collection.")
+
     if not args.no_indexing:
         hits_per_page = SETTINGS["algolia"].get("hits_per_page", 48)
         indexer = Indexer(
@@ -53,7 +59,7 @@ def main(args):
             index_name=SETTINGS["algolia"]["index_name"],
             hits_per_page=hits_per_page,
         )
-        indexer.add_objects(collection, shelves=shelves, picks=picks)
+        indexer.add_objects(collection, shelves=shelves, picks=picks, seasons=seasons)
         indexer.delete_objects_not_in(collection)
 
         print(f"Indexed {num_games} games and {num_expansions} expansions in algolia, and removed everything else.")

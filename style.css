@@ -1425,3 +1425,6 @@ details > summary:first-of-type {
   font-style: italic;
   color: var(--dark);
 }
+#facet-season .ais-RefinementList-labelText { 
+text-transform: capitalize; 
+}

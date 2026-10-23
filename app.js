@@ -21,6 +21,7 @@ function close_all(event){
 
 function on_render() {
   hide_facet_when_empty('#facet-picks');
+  hide_facet_when_empty('#facet-season');
 
   var hits = document.querySelectorAll(".ais-Hits-item");
   hits.forEach(function(hit) {
@@ -172,6 +173,16 @@ function get_widgets(SETTINGS) {
         container: '#facet-picks',
         collapsible: true,
         attribute: 'pick_by',
+        operator: 'or',
+        limit: 20,
+        sortBy: ['name:asc'],
+      }
+    ),
+    "refine_season": panel('Seasonal')(instantsearch.widgets.refinementList)(
+      {
+        container: '#facet-season',
+        collapsible: true,
+        attribute: 'season',
         operator: 'or',
         limit: 20,
         sortBy: ['name:asc'],
@@ -472,6 +483,7 @@ logSearch(searchState);
     widgets["clear"],
     widgets["refine_shelf"],
     widgets["refine_pick"],
+    widgets["refine_season"],
     widgets["refine_categories"],
     widgets["refine_mechanics"],
     widgets["refine_players"],
@@ -488,6 +500,7 @@ logSearch(searchState);
 
   search.start();
   load_new_games(SETTINGS);
+  if (typeof start_halloween_ghost === 'function') start_halloween_ghost(SETTINGS);
 
   function set_bgg_name() {
     var title = SETTINGS.project.title;
