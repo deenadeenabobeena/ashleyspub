@@ -20,6 +20,8 @@ function close_all(event){
 }
 
 function on_render() {
+  hide_facet_when_empty('#facet-picks');
+
   var hits = document.querySelectorAll(".ais-Hits-item");
   hits.forEach(function(hit) {
     color = hit.querySelector("img").getAttribute("data-maincolor");
@@ -160,6 +162,16 @@ function get_widgets(SETTINGS) {
         container: '#facet-shelf',
         collapsible: true,
         attribute: 'shelf',
+        operator: 'or',
+        limit: 20,
+        sortBy: ['name:asc'],
+      }
+    ),
+    "refine_pick": panel('Pub picks')(instantsearch.widgets.refinementList)(
+      {
+        container: '#facet-picks',
+        collapsible: true,
+        attribute: 'pick_by',
         operator: 'or',
         limit: 20,
         sortBy: ['name:asc'],
@@ -317,6 +329,14 @@ function get_widgets(SETTINGS) {
   }
 }
 
+// Hide a filter panel when it has no options to show (nothing in these results to filter by)
+function hide_facet_when_empty(facet_id) {
+  var widget = document.querySelector(facet_id);
+  if (!widget) return;
+  var has_items = widget.querySelector('.ais-RefinementList-item');
+  widget.style.display = has_items ? 'block' : 'none';
+}
+
 function hide_facet_when_no_data(facet_id, games, attr) {
   var has_data_in_attr = false;
   for (game of games) {
@@ -451,6 +471,7 @@ logSearch(searchState);
     widgets["sort"],
     widgets["clear"],
     widgets["refine_shelf"],
+    widgets["refine_pick"],
     widgets["refine_categories"],
     widgets["refine_mechanics"],
     widgets["refine_players"],
