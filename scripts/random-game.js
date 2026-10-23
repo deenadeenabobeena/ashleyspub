@@ -72,6 +72,22 @@ function loadJSONForRandomGame(path, callback) {
 function displayRandomGame(game, config) {
   console.log("Displaying random game:", game.name); // Add this to check which game is shown
   
+  // Pub pick tag (same markup as the main game cards)
+  let pickHtml = '';
+  if (game.pick_by) {
+    pickHtml = '<div class="staff-pick"><span class="staff-pick-name">★ ' + game.pick_by + "'s pick</span>" +
+      (game.pick_note ? '<span class="staff-pick-note">' + game.pick_note + '</span>' : '') + '</div>';
+  }
+
+  // Mechanics, capped at 5 like the main cards
+  let mechanicsHtml = '<em>No mechanics</em>';
+  if (game.mechanics && game.mechanics.length) {
+    mechanicsHtml = game.mechanics.slice(0, 5).join(", ");
+    if (game.mechanics.length > 5) {
+      mechanicsHtml += " (+" + (game.mechanics.length - 5) + " more)";
+    }
+  }
+
   // Create a details element like the ones used for regular games
   const detailsElement = document.createElement('details');
   detailsElement.className = 'game-wrapper';
@@ -87,6 +103,12 @@ function displayRandomGame(game, config) {
     </summary>
     <div class="game-details">
       <div class="game-details-wrapper">
+        <div class="game-top">
+          <div class="card-side">
+            <img class="card-image" src="${game.image}" alt="">
+            ${pickHtml}
+          </div>
+          <div class="game-top-text">
         <h2 class="heading">
           <a href="https://boardgamegeek.com/boardgame/${game.id}">
             ${game.name}
@@ -113,6 +135,8 @@ function displayRandomGame(game, config) {
         <p class="description">
           ${game.description || 'No description available'}
         </p>
+          </div>
+        </div>
         <dl class="properties-footer">
           <div>
             <span>Categories:</span>
@@ -123,7 +147,7 @@ function displayRandomGame(game, config) {
           <div>
             <span>Mechanics:</span>
             <dd>
-              ${game.mechanics ? game.mechanics.join(", ") : '<em>No mechanics</em>'}
+              ${mechanicsHtml}
             </dd>
           </div>
         </dl>
