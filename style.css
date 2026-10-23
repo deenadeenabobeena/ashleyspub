@@ -1379,7 +1379,7 @@ details > summary:first-of-type {
   cursor: pointer;
 }
 .new-game-row:hover { background: rgba(0, 153, 204, 0.15); }
-.new-game-row img { width: 48px; height: 48px; object-fit: cover; border-radius: 4px; flex-shrink: 0; }
+.new-game-row img { width: 48px; height: 48px; object-fit: cover; border-radius: 4px; flex-shrink: 0; margin-right: 12px; }
 .new-game-row strong { display: block; font-weight: 700; }
 .new-game-row small { display: block; margin-top: 3px; color: #666; font-size: 12px; }
 
@@ -1401,7 +1401,7 @@ details > summary:first-of-type {
 
 /* Box image on the expanded card */
 .game-top { display: flex; gap: 20px; align-items: flex-start; margin-bottom: 20px;}
-.card-side { width: 150px; flex-shrink: 0; }
+.card-side { width: 150px; flex-shrink: 0; margin-right: 20px; }
 .card-image {
   display: block;
   width: 100%;
@@ -1415,7 +1415,7 @@ details > summary:first-of-type {
 .game-top-text .properties-header { gap: 20px; flex-wrap: wrap; }
 @media (max-width: 480px) {
   .game-top { flex-direction: column; align-items: center; }
-  .card-side { width: 130px; }
+  .card-side { width: 130px; margin-right: 0; }
 }
 
 /* Staff pick under the box image */
