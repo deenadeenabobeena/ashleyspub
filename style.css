@@ -175,12 +175,14 @@ details > summary:first-of-type {
     scrollbar-width: none;
     height: 47px;
     background: var(--main);
-    gap: 50px;
     justify-content: center;
 }
 
 .facets > * {
     cursor: default;
+    /* margins instead of flex "gap" (old Safari/iPad ignores gap): 25px + 25px = the old 50px */
+    margin: 0 25px;
+    flex-shrink: 0;
 }
 
 .facets .heading {
@@ -1088,9 +1090,20 @@ details > summary:first-of-type {
     
     .facets {
         height: 42px;
-        gap: 40px;
         justify-content: unset;
-        padding: 0 13px 0 9px;
+        padding: 0;
+    }
+
+    .facets > * {
+        margin: 0 20px;
+    }
+
+    .facets > :first-child {
+        margin-left: 9px;
+    }
+
+    .facets > :last-child {
+        margin-right: 13px;
     }
     
     .sort-by {
