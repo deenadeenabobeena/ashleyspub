@@ -257,7 +257,11 @@ function get_widgets(SETTINGS) {
           });
           game.players_str = players.join(", ");
           game.categories_str = game.categories.join(", ");
-          game.mechanics_str = game.mechanics.join(", ");
+                    const MAX_MECHANICS = 5;
+          game.mechanics_str = game.mechanics.slice(0, MAX_MECHANICS).join(", ");
+          if (game.mechanics.length > MAX_MECHANICS) {
+            game.mechanics_str += " (+" + (game.mechanics.length - MAX_MECHANICS) + " more)";
+          }
           game.tags_str = game.tags.join(", ");
           game.description = game.description.trim();
           game.has_expansions = (game.expansions.length > 0);
